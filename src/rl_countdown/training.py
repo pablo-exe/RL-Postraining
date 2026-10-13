@@ -941,7 +941,7 @@ def train_grpo_experiment(
                 phase_status.append(json.loads(phase_completed.read_text(encoding="utf-8")))
                 continue
 
-            set_seed(seed, device_specific=False)
+            set_seed(seed)
             if phase_index == 1:
                 model, tokenizer = load_base_model(config)
                 model.gradient_checkpointing_enable(gradient_checkpointing_kwargs={"use_reentrant": False})
@@ -1283,7 +1283,7 @@ def train_sft_experiment(
             if resume_checkpoint is None and phase_completed.exists() and resume:
                 phase_status.append(json.loads(phase_completed.read_text(encoding="utf-8")))
                 continue
-            set_seed(seed, device_specific=False)
+            set_seed(seed)
             if phase_index == 1:
                 model, tokenizer = load_base_model(config)
                 model.gradient_checkpointing_enable(gradient_checkpointing_kwargs={"use_reentrant": False})
