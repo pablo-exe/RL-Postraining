@@ -1,0 +1,24 @@
+{
+  "dataset_sha256": "5b70aa24f0ce17b5da72c8031e39388126608e14cb82cd563a47983e52b57363",
+  "problem_sha256": {
+    "test_id": "4085cd9800c8fc52288a778ffefb7127d9155c3158ca92f015f8fae78201580a",
+    "test_ood": "13fc171df5f5df1964553cb4dc3bcc64d0ada001e30227ef45e8ed4b440e07c2",
+    "train": "857bb64f2ad9efca3af9ca4e3e12a1903d7ac5372d51ae7d3060578951cf2697",
+    "validation": "69a0d012e4e38a055819d23f8a645f84495df7907bd8c5d9c53d55f395f12a47"
+  },
+  "schema_version": 1,
+  "seed": 20261013,
+  "solver_version": "fraction-subset-dp-v1",
+  "split_counts": {
+    "test_id": 1024,
+    "test_ood": 512,
+    "train": 4096,
+    "validation": 512
+  },
+  "witness_sha256": {
+    "test_id": "df1c83370eab6972498e007445c0b1b3806f4f2a4d96b9e82cff804d918d11ae",
+    "test_ood": "cc02260b6240a7d5972da01e11e7c8599f7d01e94fe6474f4b923cf041db2608",
+    "train": "e7e23f1980ca4e1e275038741a3dc929bc0d3597f7c4b90df5d549f04c39223a",
+    "validation": "06f173f7c7deea72e995e67d9675cf1d7b901d01eceef17c9c68a84c3840ceb5"
+  }
+}

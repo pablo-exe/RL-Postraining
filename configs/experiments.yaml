@@ -1,0 +1,43 @@
+experiments:
+  - id: base_qwen25_15b
+    method: pretrained_instruct
+    seeds: []
+    train_steps: 0
+    checkpoint_source: Qwen/Qwen2.5-1.5B-Instruct@989aa7980e4cf806f80c7fef2b1adb7bc71aa306
+    reward: null
+    curriculum: none
+
+  - id: grpo_correct_seed_42
+    method: grpo
+    seeds: [42]
+    train_steps: auto_budget
+    reward: exact_solution
+    curriculum: easy_then_mixed
+
+  - id: grpo_correct_seed_43
+    method: grpo
+    seeds: [43]
+    train_steps: auto_budget
+    reward: exact_solution
+    curriculum: easy_then_mixed
+
+  - id: grpo_correct_seed_44
+    method: grpo
+    seeds: [44]
+    train_steps: auto_budget
+    reward: exact_solution
+    curriculum: easy_then_mixed
+
+  - id: grpo_validity_seed_42
+    method: grpo
+    seeds: [42]
+    train_steps: auto_budget
+    reward: expression_validity
+    curriculum: easy_then_mixed
+
+  - id: sft_witness_seed_42
+    method: sft
+    seeds: [42]
+    train_steps: auto_budget
+    reward: supervised_exact_witness
+    curriculum: easy_then_mixed

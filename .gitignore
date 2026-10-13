@@ -1,0 +1,49 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyd
+.Python
+.venv/
+venv/
+env/
+ENV/
+build/
+dist/
+*.egg-info/
+
+# Test and lint output
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+coverage.xml
+htmlcov/
+
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
+
+# Editor and operating-system files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Local runs, checkpoints, and model files
+runs/
+checkpoints/
+models/
+*.safetensors
+*.gguf
+*.pt
+*.pth
+*.ckpt
+
+# Local caches and experiment trackers
+.cache/
+hf_cache/
+wandb/
+mlruns/
+*.log

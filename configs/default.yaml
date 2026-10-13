@@ -1,0 +1,127 @@
+project:
+  name: countdown-direct-grpo
+  model_id: Qwen/Qwen2.5-1.5B-Instruct
+  model_revision: 989aa7980e4cf806f80c7fef2b1adb7bc71aa306
+  tokenizer_revision: 989aa7980e4cf806f80c7fef2b1adb7bc71aa306
+  python_version: "3.11"
+  dtype: bfloat16
+  trust_remote_code: false
+  attn_implementation: sdpa
+  results_root: results
+  runs_root: runs
+  data_root: data
+
+data:
+  seed: 20261013
+  numbers_id_min: 1
+  numbers_id_max: 30
+  numbers_ood_min: 31
+  numbers_ood_max: 60
+  target_min: 10
+  target_max: 100
+  arities: [3, 4]
+  train_size: 4096
+  validation_size: 512
+  test_id_size: 1024
+  test_ood_size: 512
+  generation_batch_size_per_arity: [2048, 2048]
+
+prompt:
+  system: >-
+    You solve arithmetic puzzles. Use every supplied number exactly once.
+    Use only +, -, *, / and parentheses. Intermediate fractions and
+    negative values are allowed. Return a single arithmetic expression
+    and nothing else.
+  max_characters: 256
+
+verifier:
+  max_expression_characters: 256
+  allowed_operators: ["+", "-", "*", "/"]
+  intermediate_values: exact_rational
+
+lora:
+  r: 16
+  lora_alpha: 32
+  lora_dropout: 0.0
+  bias: none
+  target_modules: [q_proj, k_proj, v_proj, o_proj, gate_proj, up_proj, down_proj]
+
+grpo:
+  loss_type: dr_grpo
+  reward_function: exact_solution
+  beta: 0.01
+  epsilon: 0.2
+  num_generations: 4
+  generation_batch_size: 4
+  per_device_train_batch_size: 1
+  gradient_accumulation_steps: 16
+  max_prompt_length: 256
+  max_completion_length: 96
+  temperature: 1.0
+  top_p: 1.0
+  top_k: 0
+  num_iterations: 1
+  scale_rewards: none
+  mask_truncated_completions: false
+  gradient_checkpointing: true
+  learning_rate_candidates: [0.0001, 0.0003]
+  pilot_seed: 101
+  pilot_steps: 100
+  final_step_candidates: [1200, 800, 400]
+  final_seeds: [42, 43, 44]
+  ablation_seed: 42
+  curriculum_first_phase_fraction: 0.25
+  curriculum_arity: 3
+  curriculum_phase_evaluation_size: 128
+  steps_per_phase: 100
+  learning_rate_scheduler: constant
+  warmup_steps: 0
+  weight_decay: 0.0
+  max_grad_norm: 1.0
+  optimizer: adamw_torch
+  disable_dropout: true
+  logging_steps: 10
+  dataloader_num_workers: 0
+  eval_subset_size: 128
+  smoke_steps: 8
+  generation_batch_size_fallback: 2
+  num_generations_fallback: 2
+  enable_vllm: false
+  save_total_limit: null
+
+sft_control:
+  learning_rate: 0.0001
+  per_device_train_batch_size: 1
+  gradient_accumulation_steps: 4
+  max_length: 352
+  logging_steps: 10
+  learning_rate_scheduler: constant
+  mask_prompt_loss: true
+  use_packing: false
+
+evaluation:
+  greedy_max_new_tokens: 96
+  greedy_batch_size: 1
+  sampled_temperature: 1.0
+  sampled_top_p: 1.0
+  sampled_top_k: 0
+  sampled_count: 4
+  sampled_test_id_subset_size: 256
+  sampled_test_ood_subset_size: 128
+  bootstrap_samples: 10000
+  bootstrap_seed: 20261014
+  evaluation_tie_break_order: [accuracy_desc, invalid_rate_asc, step_asc]
+  record_raw_completions: true
+
+budget:
+  gpu_hours_total: 72
+  preflight_and_pilots_hours: 6
+  final_training_hours: 56
+  final_evaluation_hours: 10
+  final_training_margin_fraction: 0.20
+  holdout_first_grpo_seed: 42
+  holdout_probe_steps: 200
+  minimum_early_gain_percentage_points: 3.0
+  uninformative_group_probe_size: 128
+  uninformative_group_min_accuracy: 0.05
+
