@@ -6,7 +6,7 @@
 
 > Quería estudiar una técnica de post-training con RL que pudiera evaluar de forma objetiva en mi propio hardware. Construí un experimento de Countdown con Qwen2.5-1.5B-Instruct: el modelo recibe tres o cuatro números y un objetivo, y devuelve una expresión que debe usar cada número exactamente una vez y alcanzar el objetivo.
 >
-> La recompensa es verificable: un parser restringido valida la expresión y la evalúa con fracciones exactas. El GRPO principal recibe uno solo si la respuesta es correcta, y cero en otro caso. Entreno adaptadores LoRA con Dr. GRPO desde el checkpoint Instruct, sin añadir mi propia fase SFT antes del RL. Comparo contra el modelo original, una ablación que premia solo expresiones válidas y un control SFT que sí ve soluciones de entrenamiento.
+> La recompensa es verificable: un parser restringido valida la expresión y la evalúa con fracciones exactas. El GRPO principal recibe 1,0 si alcanza el objetivo, 0,2 si devuelve una expresión válida pero incorrecta y 0 si incumple el formato. Entreno adaptadores LoRA con Dr. GRPO desde el checkpoint Instruct, sin añadir mi propia fase SFT antes del RL. Comparo contra el modelo original, una ablación que premia solo expresiones válidas y un control SFT que sí ve soluciones de entrenamiento.
 >
 > Genero problemas con un solucionador exacto y separo las particiones por conjunto de números para evitar que el mismo problema aparezca en train y test con otro orden. Evalúo una respuesta greedy en un test ID y separo los resultados por aridad. También tengo un test OOD con números mayores. Guardo las respuestas, recompensas, hashes, configuraciones y costes para poder auditar el resultado.
 >
@@ -28,7 +28,7 @@ Dr. GRPO es la variante fijada en este proyecto: centra las recompensas dentro d
 
 **¿Qué representan la política, la acción y la recompensa?**
 
-La política es el modelo condicionado por el problema. La acción es la respuesta generada token a token. La recompensa vale uno si la respuesta es una expresión permitida, usa correctamente los números y alcanza exactamente el objetivo; vale cero en otro caso.
+La política es el modelo condicionado por el problema. La acción es la respuesta generada token a token. La recompensa vale 1,0 si la expresión válida alcanza el objetivo, 0,2 si usa correctamente los números pero no llega al objetivo, y cero si la expresión no es válida. Un parser determinista con aritmética racional exacta calcula la recompensa.
 
 **¿Qué aporta GRPO frente a un crítico separado?**
 
@@ -38,9 +38,9 @@ Un grupo de respuestas para el mismo prompt permite estimar ventajas relativas a
 
 Es la variante fijada para normalizar la pérdida con un denominador constante, evitando que la longitud altere esa normalización como ocurre con otras formulaciones. Hay que poder señalar la implementación de TRL y su configuración concreta.
 
-**¿Por qué una recompensa binaria?**
+**¿Por qué usar este shaping?**
 
-La corrección se puede decidir exactamente sin etiquetas de razonamiento subjetivas ni un evaluador aprendido. La señal es escasa y puede producir grupos sin variación; la ablación de validez ayuda a separar formato correcto de solución correcta.
+La corrección se puede decidir exactamente sin etiquetas subjetivas ni un evaluador aprendido. En el smoke inicial con recompensa binaria, el primer grupo de actualización recibió recompensa cero y tuvo gradiente cero; en una fase posterior aparecieron aciertos exactos escasos. El componente de validez añade una señal verificable cuando el modelo ya construye una expresión admisible, mientras que la recompensa completa sigue exigiendo alcanzar el objetivo.
 
 **¿Por qué no premiar una explicación paso a paso?**
 

@@ -1,11 +1,13 @@
 from __future__ import annotations
 
 import json
+from collections import Counter
 
 import pytest
 
 from rl_countdown.dataset import (
     DatasetBundle,
+    balanced_hash_subset,
     generate_dataset,
     get_split,
     load_dataset,
@@ -62,4 +64,19 @@ def test_get_split_rejects_unknown_names(frozen_bundle: DatasetBundle) -> None:
     assert len(get_split(frozen_bundle, "test_ood")) == 512
     with pytest.raises(ValueError):
         get_split(frozen_bundle, "validation-test")
+
+
+def test_balanced_hash_subset_is_reproducible_and_balanced(frozen_bundle: DatasetBundle) -> None:
+    validation = get_split(frozen_bundle, "validation")
+    first = balanced_hash_subset(validation, 128, seed=20261014)
+    repeated = balanced_hash_subset(validation, 128, seed=20261014)
+    assert first == repeated
+    assert len(first) == 128
+    assert Counter(problem.arity for problem in first) == {3: 64, 4: 64}
+
+
+def test_balanced_hash_subset_rejects_impossible_requests(frozen_bundle: DatasetBundle) -> None:
+    validation = get_split(frozen_bundle, "validation")
+    with pytest.raises(ValueError, match="subset size"):
+        balanced_hash_subset(validation, len(validation) + 1, seed=1)
 

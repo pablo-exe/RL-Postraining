@@ -340,6 +340,38 @@ def get_split(bundle: DatasetBundle, split: str) -> tuple[Problem, ...]:
     return tuple(problem for problem in bundle.problems if problem.split == split)
 
 
+def balanced_hash_subset(
+    problems: tuple[Problem, ...],
+    size: int,
+    seed: int,
+) -> tuple[Problem, ...]:
+    """Select a deterministic, arity-balanced subset ranked by row-ID hash."""
+    if size < 0 or size > len(problems):
+        raise ValueError("subset size must be between zero and the available problem count")
+    if size == 0:
+        return ()
+    by_arity: dict[int, list[Problem]] = {}
+    for problem in problems:
+        by_arity.setdefault(problem.arity, []).append(problem)
+    arities = sorted(by_arity)
+    if not arities:
+        raise ValueError("cannot select a subset from an empty problem collection")
+    quotas = {arity: size // len(arities) for arity in arities}
+    for arity in arities[: size % len(arities)]:
+        quotas[arity] += 1
+    if any(quotas[arity] > len(by_arity[arity]) for arity in arities):
+        raise ValueError("cannot satisfy a balanced subset with the available arity counts")
+
+    selected: list[Problem] = []
+    for arity in arities:
+        ranked = sorted(
+            by_arity[arity],
+            key=lambda problem: hashlib.sha256(f"{seed}:{problem.id}".encode()).digest(),
+        )
+        selected.extend(ranked[: quotas[arity]])
+    return tuple(sorted(selected, key=lambda problem: problem.id))
+
+
 def prepare_data(config: Mapping[str, Any], output_dir: str | Path) -> dict[str, Any]:
     """Generate and persist the frozen dataset from a small config mapping.
 

@@ -218,6 +218,11 @@ def _run_smoke(config: ProjectConfig) -> dict[str, Any]:
 
     from rl_countdown.core import Problem
 
+    smoke_values = copy.deepcopy(config.values)
+    smoke_values["grpo"]["curriculum_phase_evaluation_size"] = min(
+        16, int(config.grpo["curriculum_phase_evaluation_size"])
+    )
+    config = ProjectConfig(root=config.root, values=smoke_values)
     bundle = _load_bundle(config)
     baseline_path = config.results_dir / "evaluations" / "base_qwen25_15b" / "baseline_validation_metrics.json"
     if not baseline_path.is_file():
@@ -235,7 +240,7 @@ def _run_smoke(config: ProjectConfig) -> dict[str, Any]:
             bundle,
             tracker,
             experiment_id=experiment_id,
-            reward_kind="exact_solution",
+            reward_kind="exact_plus_validity",
             seed=42,
             steps=steps,
             learning_rate=learning_rate,
@@ -250,7 +255,7 @@ def _run_smoke(config: ProjectConfig) -> dict[str, Any]:
             bundle,
             tracker,
             experiment_id=experiment_id,
-            reward_kind="exact_solution",
+            reward_kind="exact_plus_validity",
             seed=42,
             steps=steps,
             learning_rate=learning_rate,
@@ -260,9 +265,9 @@ def _run_smoke(config: ProjectConfig) -> dict[str, Any]:
 
     with tracker:
         run_id = (
-            "smoke_direct_grpo_seed_42_fallback"
+            "smoke_direct_grpo_shaped_seed_42_fallback"
             if int(config.grpo["num_generations"]) == int(config.grpo["num_generations_fallback"])
-            else "smoke_direct_grpo_seed_42"
+            else "smoke_direct_grpo_shaped_seed_42"
         )
         try:
             manifest = execute_smoke(config, run_id)
@@ -290,7 +295,7 @@ def _run_smoke(config: ProjectConfig) -> dict[str, Any]:
                 "recorded_at_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
             }
             write_json(config.results_dir / "runtime_overrides.json", overrides)
-            run_id = "smoke_direct_grpo_seed_42_fallback"
+            run_id = "smoke_direct_grpo_shaped_seed_42_fallback"
             manifest = execute_smoke(config, run_id)
         run_dir = _run_directory(config, manifest)
         rollouts = _run_rollout_statistics(
@@ -337,6 +342,7 @@ def _run_smoke(config: ProjectConfig) -> dict[str, Any]:
             else {},
             "status": manifest.get("status"),
             "requested_steps": steps,
+            "validation_subset_size": int(config.grpo["curriculum_phase_evaluation_size"]),
             "completed_steps": sum(int(phase.get("completed_steps", 0)) for phase in phases),
             "adapter_changed_in_each_phase": changed,
             "sampled_base_weights_unchanged": base_unchanged,
@@ -395,7 +401,7 @@ def _run_pilot(config: ProjectConfig) -> dict[str, Any]:
                         bundle,
                         tracker,
                         experiment_id=experiment_id,
-                        reward_kind="exact_solution",
+                        reward_kind="exact_plus_validity",
                         seed=int(config.grpo["pilot_seed"]),
                         steps=expected_steps,
                         learning_rate=learning_rate,
@@ -619,7 +625,7 @@ def _run_grpo(config: ProjectConfig, resume: bool) -> list[dict[str, Any]]:
                         bundle,
                         tracker,
                         experiment_id=experiment_id,
-                        reward_kind="exact_solution",
+                        reward_kind="exact_plus_validity",
                         seed=seed,
                         steps=steps,
                         learning_rate=learning_rate,
@@ -641,7 +647,7 @@ def _run_grpo(config: ProjectConfig, resume: bool) -> list[dict[str, Any]]:
                             bundle,
                             tracker,
                             experiment_id=experiment_id,
-                            reward_kind="exact_solution",
+                            reward_kind="exact_plus_validity",
                             seed=seed,
                             steps=steps,
                             learning_rate=learning_rate,
@@ -656,7 +662,7 @@ def _run_grpo(config: ProjectConfig, resume: bool) -> list[dict[str, Any]]:
                     bundle,
                     tracker,
                     experiment_id=experiment_id,
-                    reward_kind="exact_solution",
+                    reward_kind="exact_plus_validity",
                     seed=seed,
                     steps=steps,
                     learning_rate=learning_rate,

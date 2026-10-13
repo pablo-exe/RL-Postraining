@@ -17,7 +17,7 @@ from typing import Any
 from rl_countdown.budget import GpuBudget
 from rl_countdown.config import ProjectConfig
 from rl_countdown.core import Problem, verify_expression
-from rl_countdown.dataset import DatasetBundle, ReferenceSolution, get_split
+from rl_countdown.dataset import DatasetBundle, ReferenceSolution, balanced_hash_subset, get_split
 from rl_countdown.modeling import (
     discover_adapter_registry,
     load_base_model,
@@ -233,7 +233,7 @@ def make_reward_function(
     rollouts: JsonlWriter,
     phase_id: str,
 ) -> Callable[..., list[float]]:
-    if reward_kind not in {"exact_solution", "expression_validity"}:
+    if reward_kind not in {"exact_plus_validity", "expression_validity"}:
         raise ValueError(f"Unsupported reward function: {reward_kind}")
 
     def reward_function(
@@ -260,9 +260,10 @@ def make_reward_function(
         ):
             text = extract_completion_text(raw_completion)
             verification = verify_expression(text, provided_numbers, int(objective))
-            reward = float(
-                verification.correct if reward_kind == "exact_solution" else verification.valid
-            )
+            if reward_kind == "exact_plus_validity":
+                reward = 1.0 if verification.correct else 0.2 if verification.valid else 0.0
+            else:
+                reward = float(verification.valid)
             rewards.append(reward)
             rollouts.write(
                 {
@@ -280,6 +281,8 @@ def make_reward_function(
                     "value_numerator": verification.value_numerator,
                     "value_denominator": verification.value_denominator,
                     "reward_kind": reward_kind,
+                    "correctness_component": float(verification.correct),
+                    "validity_component": float(verification.valid),
                     "reward": reward,
                 }
             )
@@ -495,7 +498,9 @@ class ValidationCallback:
                     experiment_id=self.experiment_id,
                     checkpoint_step=step,
                 )
-                writer = JsonlWriter(self.run_dir / "checkpoint_evaluations.jsonl")
+                phase_dir = self.run_dir / self.phase_id
+                phase_dir.mkdir(parents=True, exist_ok=True)
+                writer = JsonlWriter(phase_dir / "checkpoint_evaluations.jsonl")
                 try:
                     writer.write(
                         {
@@ -857,8 +862,11 @@ def train_grpo_experiment(
     from trl import GRPOTrainer
 
     trainer_train = get_split(bundle, "train")
-    validation = get_split(bundle, "validation")
-    validation = validation[: int(config.grpo["curriculum_phase_evaluation_size"])]
+    validation = balanced_hash_subset(
+        get_split(bundle, "validation"),
+        int(config.grpo["curriculum_phase_evaluation_size"]),
+        int(config.evaluation["bootstrap_seed"]),
+    )
     phase_one_steps, phase_two_steps = _step_split(
         trainer_train,
         steps,
@@ -1211,7 +1219,11 @@ def train_sft_experiment(
 
     references = {item.id: item for item in bundle.witnesses}
     training_problems = get_split(bundle, "train")
-    validation = get_split(bundle, "validation")[: int(config.grpo["curriculum_phase_evaluation_size"])]
+    validation = balanced_hash_subset(
+        get_split(bundle, "validation"),
+        int(config.grpo["curriculum_phase_evaluation_size"]),
+        int(config.evaluation["bootstrap_seed"]),
+    )
     phase_one, phase_two = _step_split(
         training_problems,
         steps,

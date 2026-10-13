@@ -109,7 +109,10 @@ def load_experiments(config: ProjectConfig) -> tuple[Experiment, ...]:
             raise ValueError(f"Experiment identifiers must be unique: {experiment.experiment_id}")
         if experiment.method not in {"pretrained_instruct", "grpo", "sft"}:
             raise ValueError(f"Unsupported experiment method: {experiment.method}")
-        if experiment.method == "grpo" and experiment.reward not in {"exact_solution", "expression_validity"}:
+        if experiment.method == "grpo" and experiment.reward not in {
+            "exact_plus_validity",
+            "expression_validity",
+        }:
             raise ValueError(f"Unsupported reward for {experiment.experiment_id}: {experiment.reward}")
         if experiment.method == "pretrained_instruct" and (experiment.steps != 0 or experiment.seeds):
             raise ValueError("The original-model reference must not perform training updates.")

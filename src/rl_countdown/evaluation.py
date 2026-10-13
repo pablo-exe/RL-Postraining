@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import hashlib
 import json
-import random
 from collections import Counter, defaultdict
 from pathlib import Path
 from typing import Any
@@ -12,7 +11,7 @@ from typing import Any
 from rl_countdown.budget import GpuBudget
 from rl_countdown.config import ProjectConfig
 from rl_countdown.core import Problem
-from rl_countdown.dataset import DatasetBundle, get_split
+from rl_countdown.dataset import DatasetBundle, balanced_hash_subset, get_split
 from rl_countdown.modeling import discover_adapter_registry, load_base_model, require_cuda
 from rl_countdown.training import generate_for_problem, now_utc, write_json
 
@@ -290,12 +289,11 @@ def run_full_evaluation(config: ProjectConfig, bundle: DatasetBundle, tracker: G
         "test_ood": int(config.evaluation["sampled_test_ood_subset_size"]),
     }
     sampled_problems: dict[str, tuple[Problem, ...]] = {}
-    for split, problems in split_problems.items():
-        size = min(sample_sizes[split], len(problems))
-        sampled_problems[split] = tuple(
-            random.Random(int(config.evaluation["bootstrap_seed"]) + (0 if split == "test_id" else 1)).sample(
-                list(problems), size
-            )
+    for split in ("test_id", "test_ood"):
+        sampled_problems[split] = balanced_hash_subset(
+            split_problems[split],
+            min(sample_sizes[split], len(split_problems[split])),
+            int(config.evaluation["bootstrap_seed"]) + (0 if split == "test_id" else 1),
         )
     all_metrics: dict[str, Any] = {
         "schema_version": 1,
@@ -368,7 +366,11 @@ def evaluate_baseline(config: ProjectConfig, bundle: DatasetBundle, tracker: Gpu
 
     require_cuda()
     model, tokenizer = load_base_model(config)
-    problems = get_split(bundle, "validation")[: int(config.grpo["eval_subset_size"])]
+    problems = balanced_hash_subset(
+        get_split(bundle, "validation"),
+        int(config.grpo["eval_subset_size"]),
+        int(config.evaluation["bootstrap_seed"]),
+    )
     metrics, predictions = evaluate_problems(
         model,
         tokenizer,

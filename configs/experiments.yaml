@@ -11,21 +11,21 @@ experiments:
     method: grpo
     seeds: [42]
     train_steps: auto_budget
-    reward: exact_solution
+    reward: exact_plus_validity
     curriculum: easy_then_mixed
 
   - id: grpo_correct_seed_43
     method: grpo
     seeds: [43]
     train_steps: auto_budget
-    reward: exact_solution
+    reward: exact_plus_validity
     curriculum: easy_then_mixed
 
   - id: grpo_correct_seed_44
     method: grpo
     seeds: [44]
     train_steps: auto_budget
-    reward: exact_solution
+    reward: exact_plus_validity
     curriculum: easy_then_mixed
 
   - id: grpo_validity_seed_42

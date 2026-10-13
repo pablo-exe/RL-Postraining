@@ -4,7 +4,7 @@
 
 ## Research question and claim boundary
 
-Test whether direct reinforcement learning with a verifiable binary reward improves one-shot exact solution accuracy on synthetic Countdown arithmetic problems for a small instruction model. The result supports a claim about this task and protocol only. It does not establish general reasoning ability or show that an LLM is preferable to an exact solver.
+Test whether direct reinforcement learning with a shaped, exactly verifiable reward improves one-shot exact solution accuracy on synthetic Countdown arithmetic problems for a small instruction model. The result supports a claim about this task and protocol only. It does not establish general reasoning ability or show that an LLM is preferable to an exact solver.
 
 The main comparison is direct GRPO against the original instruction checkpoint. A validity-only reward ablation separates admissible expression generation from reaching the target. An independent SFT adapter provides a supervised reference point and explicitly has access to solution witnesses.
 
@@ -17,10 +17,12 @@ The main comparison is direct GRPO against the original instruction checkpoint. 
 | License reference | Apache 2.0 per the pinned model card |
 | Adaptation | LoRA; original model parameters frozen |
 | RL library / method | Hugging Face TRL / GRPO with `loss_type=dr_grpo` |
-| Main reward | `1.0` only for a valid exact solution; otherwise `0.0` |
+| Main reward | `1.0` for an exact solution, `0.2` for a valid but incorrect expression, and `0.0` for invalid output |
 | Validity ablation | `1.0` for an admissible expression using the supplied numbers; otherwise `0.0` |
 | Main seeds | `42`, `43`, `44` |
 | Compute cap | 72 accumulated GPU-hours; no paid compute or services |
+
+The initial engineering smoke test used binary exact reward. Its first update group had all-zero rewards and zero gradient; a later phase produced rare exact-reward positives. Before any learning-rate pilot or final test evaluation, freeze the shaped reward above so valid expressions can provide a verifiable intermediate signal more often. Keep that binary-reward diagnostic in the local audit trail, separate from the final experiment matrix, and do not use test data to change this choice. The smoke run uses a fixed 16-row, arity-balanced validation subset to check checkpointing and adapter reload; pilot and final checkpoint selection use the frozen 128-row subset.
 
 “Direct GRPO” means no project-specific SFT before RL. The public checkpoint itself is already instruction-tuned.
 
@@ -87,14 +89,14 @@ Use the same fixed curriculum for every training run: first 25% of optimizer upd
 
 ### Smoke test, pilots, and final runs
 
-The smoke test uses eight steps on fixed train data. Check finite losses/rewards/gradients, grouping, at least one non-uniform reward group among up to 128 train problems, changed LoRA parameters after a signal-bearing update, unchanged sampled base weights, save/reload/resume, peak memory, and step time. On OOM, automatically rerun with generation batch 2 and two generations while keeping accumulation 16, save that sole permitted runtime override, and use it across experiments. If it still fails, stop and record the diagnosis; do not change model, precision, reward, or adaptation method.
+The smoke test uses eight steps on fixed train data and the 16-row validation subset described above. Check finite losses/rewards/gradients, grouping, at least one non-uniform reward group among up to 128 train problems, changed LoRA parameters after a signal-bearing update, unchanged sampled base weights, save/reload/resume, peak memory, and step time. On OOM, automatically rerun with generation batch 2 and two generations while keeping accumulation 16, save that sole permitted runtime override, and use it across experiments. If it still fails, stop and record the diagnosis; do not change model, precision, reward, or adaptation method.
 
 Run two 100-step pilots from the original checkpoint, both seed 101 and the fixed curriculum. Pilot A uses LR `1e-4`; B uses `3e-4`. Before training, freeze 128 validation problems balanced by arity and selected by row-ID hash. Evaluate greedily; choose higher exact accuracy, then fewer invalid responses, then lower LR. Do not reuse pilot adapters.
 
 | Experiment | Initialization | Seeds | Purpose |
 |---|---|---|---|
 | Original model | Pinned public checkpoint | — | Baseline |
-| Main GRPO | New LoRA from public checkpoint | 42, 43, 44 | Binary exact-correctness reward |
+| Main GRPO | New LoRA from public checkpoint | 42, 43, 44 | Shaped exact-correctness reward |
 | Validity ablation | New LoRA from public checkpoint | 42 | Binary validity-only reward |
 | SFT control | New LoRA from public checkpoint | 42 | Train on exact train witnesses |
 

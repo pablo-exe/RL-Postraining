@@ -1,6 +1,6 @@
 # Countdown RLVR
 
-An auditable reinforcement-learning post-training experiment for a small instruction model. The project tests whether **direct GRPO with a binary, exact-verification reward** improves a model's ability to solve Countdown arithmetic puzzles in one response.
+An auditable reinforcement-learning post-training experiment for a small instruction model. The project tests whether **direct GRPO with a shaped, exactly verifiable reward** improves a model's ability to solve Countdown arithmetic puzzles in one response.
 
 This is a deliberately narrow experiment. It can support a claim about arithmetic puzzle solving under the stated protocol; it cannot establish that the model gained general reasoning ability. The project compares RL with the untouched model and with a separately trained supervised control.
 
@@ -25,7 +25,7 @@ This is a deliberately narrow experiment. It can support a claim about arithmeti
 | Adaptation | LoRA, with original model weights frozen |
 | Main method | Direct GRPO using TRL and the Dr. GRPO loss; no project SFT before RL |
 | Task | Use each supplied integer exactly once to form a target with `+`, `-`, `*`, `/`, and parentheses |
-| Main reward | `1` only when the expression is valid and evaluates exactly to the target; otherwise `0` |
+| Main reward | `1.0` for an exact solution, `0.2` for a valid but incorrect expression, and `0` for invalid output |
 | Data | Deterministically generated, exact-verified train, validation, ID test, and OOD test splits |
 | Controls | Original checkpoint, validity-only reward ablation, and independent SFT adapter |
 | Compute limit | At most 72 accumulated GPU-hours, with no paid compute or services |
@@ -68,6 +68,8 @@ uv run rl-countdown evaluate --config configs/default.yaml
 uv run rl-countdown report --config configs/default.yaml
 ```
 
+The engineering smoke run uses only 16 balanced validation problems to verify save, resume, and adapter loading quickly. The 128-row validation subset is reserved for pilot and training-checkpoint comparisons; the final report evaluates the full 512-row validation split.
+
 Training commands accept `--resume`; a resumed run must have matching model, data, and configuration hashes. Each run uses its own output directory, and a new run must not overwrite an existing one. For local inference, point `--adapter` at a selected trained adapter:
 
 ```powershell
@@ -87,7 +89,7 @@ The pre-registered target is a mean improvement of at least 10 percentage points
 - Countdown has an exact classical solver. This project studies whether a small instruction model can learn the task through verifiable-reward post-training; it does not claim the LLM is the best solver for this task.
 - A synthetic benchmark is narrow and may reward patterns specific to its generator. ID performance does not show broad reasoning ability.
 - OOD changes the number range only. It is a limited generalization check, not a comprehensive robustness evaluation.
-- Binary rewards can yield groups with no reward variation. The runs log this condition and the smoke test checks that useful reward variation exists before long training.
+- The shaped reward gives valid-but-incorrect expressions 0.2 and exact solutions 1.0; the validity-only ablation isolates the contribution of exact correctness. Reward-group variation is logged because GRPO cannot learn from uniform groups.
 - SFT has reference expressions and is not compute- or information-equivalent to GRPO. Report its label access and cost explicitly.
 - Results depend on the stated prompt, parser, decoding settings, data hashes, and hardware. Do not compare numbers produced under a different protocol as if they were the same experiment.
 

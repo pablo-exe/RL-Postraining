@@ -35,10 +35,10 @@ def test_sft_encoding_masks_prompt_and_trains_completion() -> None:
     assert encoded["labels"] == [-100, -100, 21, 22]
 
 
-def test_reward_function_distinguishes_exact_solution_from_valid_format(tmp_path) -> None:
+def test_reward_function_shaping_distinguishes_exact_solution_from_valid_format(tmp_path) -> None:
     problem = Problem("p1", "train", (2, 3, 7), 20)
     exact_writer = JsonlWriter(tmp_path / "exact.jsonl")
-    exact = make_reward_function("exact_solution", exact_writer, "phase-01")
+    exact = make_reward_function("exact_plus_validity", exact_writer, "phase-01")
     rewards = exact(
         completions=[
             [{"role": "assistant", "content": "(7 + 3) * 2"}],
@@ -51,7 +51,7 @@ def test_reward_function_distinguishes_exact_solution_from_valid_format(tmp_path
         trainer_state=type("State", (), {"global_step": 4})(),
     )
     exact_writer.close()
-    assert rewards == [1.0, 0.0]
+    assert rewards == [1.0, 0.2]
 
     valid_writer = JsonlWriter(tmp_path / "validity.jsonl")
     validity = make_reward_function("expression_validity", valid_writer, "phase-01")
@@ -73,3 +73,4 @@ def test_reward_function_distinguishes_exact_solution_from_valid_format(tmp_path
     assert rows[0]["correct"] is True
     assert rows[1]["valid"] is True
     assert rows[1]["correct"] is False
+    assert rows[1]["reward"] == 0.2
