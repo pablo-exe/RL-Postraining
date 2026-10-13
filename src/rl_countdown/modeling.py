@@ -104,12 +104,14 @@ def load_base_model(config: ProjectConfig) -> tuple[Any, Any]:
     model = AutoModelForCausalLM.from_pretrained(
         model_id,
         revision=revision,
-        torch_dtype=torch.bfloat16,
+        dtype=torch.bfloat16,
         trust_remote_code=False,
         attn_implementation="sdpa",
         low_cpu_mem_usage=True,
         device_map={"": 0},
     )
+    for parameter in model.parameters():
+        parameter.requires_grad_(False)
     if not all(not parameter.requires_grad for parameter in model.parameters()):
         raise RuntimeError("All original model parameters must remain frozen before the LoRA adapter is attached.")
     model.config.use_cache = False
