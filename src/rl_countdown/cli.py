@@ -265,9 +265,9 @@ def _run_smoke(config: ProjectConfig) -> dict[str, Any]:
 
     with tracker:
         run_id = (
-            "smoke_direct_grpo_shaped_seed_42_fallback"
+            "smoke_direct_grpo_shaped_v2_seed_42_fallback"
             if int(config.grpo["num_generations"]) == int(config.grpo["num_generations_fallback"])
-            else "smoke_direct_grpo_shaped_seed_42"
+            else "smoke_direct_grpo_shaped_v2_seed_42"
         )
         try:
             manifest = execute_smoke(config, run_id)
@@ -295,7 +295,7 @@ def _run_smoke(config: ProjectConfig) -> dict[str, Any]:
                 "recorded_at_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
             }
             write_json(config.results_dir / "runtime_overrides.json", overrides)
-            run_id = "smoke_direct_grpo_shaped_seed_42_fallback"
+            run_id = "smoke_direct_grpo_shaped_v2_seed_42_fallback"
             manifest = execute_smoke(config, run_id)
         run_dir = _run_directory(config, manifest)
         rollouts = _run_rollout_statistics(

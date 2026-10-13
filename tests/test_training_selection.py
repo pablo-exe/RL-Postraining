@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import json
 
-from rl_countdown.training import select_checkpoint
+from rl_countdown.training import _completed_phase_record, select_checkpoint
 
 
 def test_checkpoint_selection_reads_phase_local_validation_log(tmp_path) -> None:
@@ -32,3 +32,16 @@ def test_checkpoint_selection_reads_phase_local_validation_log(tmp_path) -> None
     assert selected_dir == phase_dir / "checkpoint-4"
     assert selected_metrics["global_step"] == 4
     assert selected_metrics["metrics"]["solve_rate"] == 0.125
+
+
+def test_resume_skips_only_a_phase_with_a_complete_step_budget(tmp_path) -> None:
+    marker = tmp_path / "phase_complete.json"
+    marker.write_text(
+        json.dumps({"phase_complete": True, "completed_steps": 2}),
+        encoding="utf-8",
+    )
+    assert _completed_phase_record(marker, requested_steps=2) == {
+        "phase_complete": True,
+        "completed_steps": 2,
+    }
+    assert _completed_phase_record(marker, requested_steps=3) is None

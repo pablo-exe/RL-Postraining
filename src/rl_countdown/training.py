@@ -685,6 +685,16 @@ def _step_evaluations(
     return records
 
 
+def _completed_phase_record(path: Path, requested_steps: int) -> dict[str, Any] | None:
+    """Return the completion marker only when its recorded update budget is satisfied."""
+    if not path.is_file():
+        return None
+    record = json.loads(path.read_text(encoding="utf-8"))
+    if not record.get("phase_complete") or int(record.get("completed_steps", 0)) < requested_steps:
+        return None
+    return record
+
+
 def select_checkpoint(
     run_dir: Path,
     phase_dirs: tuple[Path, ...],
@@ -944,10 +954,11 @@ def train_grpo_experiment(
             phase_dir.mkdir(parents=True, exist_ok=True)
             phase_dirs.append(phase_dir)
             phase_completed = phase_dir / "phase_complete.json"
-            checkpoint = get_last_checkpoint(str(phase_dir)) if resume else None
-            if checkpoint is None and phase_completed.exists() and resume:
-                phase_status.append(json.loads(phase_completed.read_text(encoding="utf-8")))
+            completed_record = _completed_phase_record(phase_completed, phase_steps) if resume else None
+            if completed_record is not None:
+                phase_status.append(completed_record)
                 continue
+            checkpoint = get_last_checkpoint(str(phase_dir)) if resume else None
 
             set_seed(seed)
             if phase_index == 1:
@@ -1291,10 +1302,11 @@ def train_sft_experiment(
             phase_dir.mkdir(parents=True, exist_ok=True)
             phase_dirs.append(phase_dir)
             phase_completed = phase_dir / "phase_complete.json"
-            resume_checkpoint = get_last_checkpoint(str(phase_dir)) if resume else None
-            if resume_checkpoint is None and phase_completed.exists() and resume:
-                phase_status.append(json.loads(phase_completed.read_text(encoding="utf-8")))
+            completed_record = _completed_phase_record(phase_completed, phase_steps) if resume else None
+            if completed_record is not None:
+                phase_status.append(completed_record)
                 continue
+            resume_checkpoint = get_last_checkpoint(str(phase_dir)) if resume else None
             set_seed(seed)
             if phase_index == 1:
                 model, tokenizer = load_base_model(config)
