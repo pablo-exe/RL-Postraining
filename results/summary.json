@@ -1,0 +1,520 @@
+{
+  "evaluation_complete": true,
+  "figures": [
+    "results/figures/accuracy_id_ood.png",
+    "results/figures/validation_curves.png"
+  ],
+  "generated_at_utc": "2026-10-14T13:27:51+00:00",
+  "gpu_hours_limit": 72.0,
+  "gpu_hours_used": 15.208532777777776,
+  "measured_experiments": [
+    "base_qwen25_15b",
+    "grpo_correct_seed_42",
+    "grpo_validity_seed_42",
+    "sft_witness_seed_42"
+  ],
+  "metrics": [
+    {
+      "experiment_id": "base_qwen25_15b",
+      "test_id": {
+        "by_arity": {
+          "3": {
+            "count": 512,
+            "solve_rate": 0.015625,
+            "valid_rate": 0.18359375
+          },
+          "4": {
+            "count": 512,
+            "solve_rate": 0.00390625,
+            "valid_rate": 0.18359375
+          }
+        },
+        "complete": true,
+        "conditional_accuracy": 0.05319148936170213,
+        "correct_count": 10,
+        "count": 1024,
+        "error_counts": {
+          "invalid_characters": 721,
+          "unsupported_node": 1,
+          "wrong_numbers": 114
+        },
+        "evaluation_mode": "greedy",
+        "expected_count": 1024,
+        "experiment_id": "base_qwen25_15b",
+        "finish_reason_counts": {
+          "eos": 1024
+        },
+        "invalid_rate": 0.81640625,
+        "max_new_tokens_rate": 0.0,
+        "mean_completion_tokens": 18.1845703125,
+        "mean_latency_seconds": 0.932783309862657,
+        "metric": "greedy_accuracy",
+        "predictions_path": "results/evaluations/base_qwen25_15b/predictions_test_id_greedy.jsonl",
+        "solve_rate": 0.009765625,
+        "split": "test_id",
+        "updated_at_utc": "2026-10-14T08:31:52+00:00",
+        "valid_count": 188,
+        "valid_rate": 0.18359375
+      },
+      "test_id_sampled": {
+        "complete": true,
+        "count": 256,
+        "evaluation_mode": "sampled_k4",
+        "expected_count": 256,
+        "experiment_id": "base_qwen25_15b",
+        "mean_completion_tokens": 20.9345703125,
+        "mean_latency_seconds": 1.0752241718735718,
+        "metric": "sampled_pass_at_k",
+        "pass_at_1": 0.0087890625,
+        "pass_at_k": 0.02734375,
+        "predictions_path": "results/evaluations/base_qwen25_15b/predictions_test_id_sampled_k4.jsonl",
+        "samples_per_problem": 4,
+        "split": "test_id",
+        "updated_at_utc": "2026-10-14T08:50:21+00:00",
+        "valid_rate": 0.1484375
+      },
+      "test_ood": {
+        "by_arity": {
+          "3": {
+            "count": 256,
+            "solve_rate": 0.0078125,
+            "valid_rate": 0.06640625
+          },
+          "4": {
+            "count": 256,
+            "solve_rate": 0.0,
+            "valid_rate": 0.20703125
+          }
+        },
+        "complete": true,
+        "conditional_accuracy": 0.02857142857142857,
+        "correct_count": 2,
+        "count": 512,
+        "error_counts": {
+          "invalid_characters": 347,
+          "wrong_numbers": 95
+        },
+        "evaluation_mode": "greedy",
+        "expected_count": 512,
+        "experiment_id": "base_qwen25_15b",
+        "finish_reason_counts": {
+          "eos": 512
+        },
+        "invalid_rate": 0.86328125,
+        "max_new_tokens_rate": 0.0,
+        "mean_completion_tokens": 19.5,
+        "mean_latency_seconds": 0.9933253246093727,
+        "metric": "greedy_accuracy",
+        "predictions_path": "results/evaluations/base_qwen25_15b/predictions_test_ood_greedy.jsonl",
+        "solve_rate": 0.00390625,
+        "split": "test_ood",
+        "updated_at_utc": "2026-10-14T08:58:54+00:00",
+        "valid_count": 70,
+        "valid_rate": 0.13671875
+      },
+      "test_ood_sampled": {
+        "complete": true,
+        "count": 128,
+        "evaluation_mode": "sampled_k4",
+        "expected_count": 128,
+        "experiment_id": "base_qwen25_15b",
+        "mean_completion_tokens": 22.578125,
+        "mean_latency_seconds": 1.1614853433569579,
+        "metric": "sampled_pass_at_k",
+        "pass_at_1": 0.005859375,
+        "pass_at_k": 0.0234375,
+        "predictions_path": "results/evaluations/base_qwen25_15b/predictions_test_ood_sampled_k4.jsonl",
+        "samples_per_problem": 4,
+        "split": "test_ood",
+        "updated_at_utc": "2026-10-14T09:08:52+00:00",
+        "valid_rate": 0.130859375
+      }
+    },
+    {
+      "experiment_id": "grpo_correct_seed_42",
+      "test_id": {
+        "by_arity": {
+          "3": {
+            "count": 512,
+            "solve_rate": 0.03125,
+            "valid_rate": 1.0
+          },
+          "4": {
+            "count": 512,
+            "solve_rate": 0.0,
+            "valid_rate": 0.314453125
+          }
+        },
+        "complete": true,
+        "conditional_accuracy": 0.0237741456166419,
+        "correct_count": 16,
+        "count": 1024,
+        "error_counts": {
+          "invalid_syntax": 6,
+          "wrong_numbers": 345
+        },
+        "evaluation_mode": "greedy",
+        "expected_count": 1024,
+        "experiment_id": "grpo_correct_seed_42",
+        "finish_reason_counts": {
+          "eos": 1024
+        },
+        "invalid_rate": 0.3427734375,
+        "max_new_tokens_rate": 0.0,
+        "mean_completion_tokens": 13.046875,
+        "mean_latency_seconds": 1.3306908857430244,
+        "metric": "greedy_accuracy",
+        "predictions_path": "results/evaluations/grpo_correct_seed_42/predictions_test_id_greedy.jsonl",
+        "solve_rate": 0.015625,
+        "split": "test_id",
+        "updated_at_utc": "2026-10-14T09:43:37+00:00",
+        "valid_count": 673,
+        "valid_rate": 0.6572265625
+      },
+      "test_id_sampled": {
+        "complete": true,
+        "count": 256,
+        "evaluation_mode": "sampled_k4",
+        "expected_count": 256,
+        "experiment_id": "grpo_correct_seed_42",
+        "mean_completion_tokens": 13.298828125,
+        "mean_latency_seconds": 1.3874170994139376,
+        "metric": "sampled_pass_at_k",
+        "pass_at_1": 0.015625,
+        "pass_at_k": 0.015625,
+        "predictions_path": "results/evaluations/grpo_correct_seed_42/predictions_test_id_sampled_k4.jsonl",
+        "samples_per_problem": 4,
+        "split": "test_id",
+        "updated_at_utc": "2026-10-14T10:07:40+00:00",
+        "valid_rate": 0.6865234375
+      },
+      "test_ood": {
+        "by_arity": {
+          "3": {
+            "count": 256,
+            "solve_rate": 0.0,
+            "valid_rate": 1.0
+          },
+          "4": {
+            "count": 256,
+            "solve_rate": 0.0,
+            "valid_rate": 0.2421875
+          }
+        },
+        "complete": true,
+        "conditional_accuracy": 0.0,
+        "correct_count": 0,
+        "count": 512,
+        "error_counts": {
+          "wrong_numbers": 194
+        },
+        "evaluation_mode": "greedy",
+        "expected_count": 512,
+        "experiment_id": "grpo_correct_seed_42",
+        "finish_reason_counts": {
+          "eos": 512
+        },
+        "invalid_rate": 0.37890625,
+        "max_new_tokens_rate": 0.0,
+        "mean_completion_tokens": 13.595703125,
+        "mean_latency_seconds": 1.396455191016571,
+        "metric": "greedy_accuracy",
+        "predictions_path": "results/evaluations/grpo_correct_seed_42/predictions_test_ood_greedy.jsonl",
+        "solve_rate": 0.0,
+        "split": "test_ood",
+        "updated_at_utc": "2026-10-14T10:19:46+00:00",
+        "valid_count": 318,
+        "valid_rate": 0.62109375
+      },
+      "test_ood_sampled": {
+        "complete": true,
+        "count": 128,
+        "evaluation_mode": "sampled_k4",
+        "expected_count": 128,
+        "experiment_id": "grpo_correct_seed_42",
+        "mean_completion_tokens": 14.041015625,
+        "mean_latency_seconds": 1.431070905078741,
+        "metric": "sampled_pass_at_k",
+        "pass_at_1": 0.0,
+        "pass_at_k": 0.0,
+        "predictions_path": "results/evaluations/grpo_correct_seed_42/predictions_test_ood_sampled_k4.jsonl",
+        "samples_per_problem": 4,
+        "split": "test_ood",
+        "updated_at_utc": "2026-10-14T10:32:10+00:00",
+        "valid_rate": 0.701171875
+      }
+    },
+    {
+      "experiment_id": "grpo_correct_seed_43",
+      "test_id": null,
+      "test_id_sampled": null,
+      "test_ood": null,
+      "test_ood_sampled": null
+    },
+    {
+      "experiment_id": "grpo_correct_seed_44",
+      "test_id": null,
+      "test_id_sampled": null,
+      "test_ood": null,
+      "test_ood_sampled": null
+    },
+    {
+      "experiment_id": "grpo_validity_seed_42",
+      "test_id": {
+        "by_arity": {
+          "3": {
+            "count": 512,
+            "solve_rate": 0.189453125,
+            "valid_rate": 1.0
+          },
+          "4": {
+            "count": 512,
+            "solve_rate": 0.0390625,
+            "valid_rate": 1.0
+          }
+        },
+        "complete": true,
+        "conditional_accuracy": 0.1142578125,
+        "correct_count": 117,
+        "count": 1024,
+        "error_counts": {},
+        "evaluation_mode": "greedy",
+        "expected_count": 1024,
+        "experiment_id": "grpo_validity_seed_42",
+        "finish_reason_counts": {
+          "eos": 1024
+        },
+        "invalid_rate": 0.0,
+        "max_new_tokens_rate": 0.0,
+        "mean_completion_tokens": 13.95703125,
+        "mean_latency_seconds": 1.4265984413072488,
+        "metric": "greedy_accuracy",
+        "predictions_path": "results/evaluations/grpo_validity_seed_42/predictions_test_id_greedy.jsonl",
+        "solve_rate": 0.1142578125,
+        "split": "test_id",
+        "updated_at_utc": "2026-10-14T11:09:16+00:00",
+        "valid_count": 1024,
+        "valid_rate": 1.0
+      },
+      "test_id_sampled": {
+        "complete": true,
+        "count": 256,
+        "evaluation_mode": "sampled_k4",
+        "expected_count": 256,
+        "experiment_id": "grpo_validity_seed_42",
+        "mean_completion_tokens": 13.9453125,
+        "mean_latency_seconds": 1.4363313104484519,
+        "metric": "sampled_pass_at_k",
+        "pass_at_1": 0.1201171875,
+        "pass_at_k": 0.12109375,
+        "predictions_path": "results/evaluations/grpo_validity_seed_42/predictions_test_id_sampled_k4.jsonl",
+        "samples_per_problem": 4,
+        "split": "test_id",
+        "updated_at_utc": "2026-10-14T11:34:08+00:00",
+        "valid_rate": 0.998046875
+      },
+      "test_ood": {
+        "by_arity": {
+          "3": {
+            "count": 256,
+            "solve_rate": 0.0,
+            "valid_rate": 1.0
+          },
+          "4": {
+            "count": 256,
+            "solve_rate": 0.0,
+            "valid_rate": 1.0
+          }
+        },
+        "complete": true,
+        "conditional_accuracy": 0.0,
+        "correct_count": 0,
+        "count": 512,
+        "error_counts": {},
+        "evaluation_mode": "greedy",
+        "expected_count": 512,
+        "experiment_id": "grpo_validity_seed_42",
+        "finish_reason_counts": {
+          "eos": 512
+        },
+        "invalid_rate": 0.0,
+        "max_new_tokens_rate": 0.0,
+        "mean_completion_tokens": 15.0,
+        "mean_latency_seconds": 1.5372268242184646,
+        "metric": "greedy_accuracy",
+        "predictions_path": "results/evaluations/grpo_validity_seed_42/predictions_test_ood_greedy.jsonl",
+        "solve_rate": 0.0,
+        "split": "test_ood",
+        "updated_at_utc": "2026-10-14T11:47:27+00:00",
+        "valid_count": 512,
+        "valid_rate": 1.0
+      },
+      "test_ood_sampled": {
+        "complete": true,
+        "count": 128,
+        "evaluation_mode": "sampled_k4",
+        "expected_count": 128,
+        "experiment_id": "grpo_validity_seed_42",
+        "mean_completion_tokens": 15.0,
+        "mean_latency_seconds": 1.5699479363274804,
+        "metric": "sampled_pass_at_k",
+        "pass_at_1": 0.0,
+        "pass_at_k": 0.0,
+        "predictions_path": "results/evaluations/grpo_validity_seed_42/predictions_test_ood_sampled_k4.jsonl",
+        "samples_per_problem": 4,
+        "split": "test_ood",
+        "updated_at_utc": "2026-10-14T12:01:02+00:00",
+        "valid_rate": 0.998046875
+      }
+    },
+    {
+      "experiment_id": "sft_witness_seed_42",
+      "test_id": {
+        "by_arity": {
+          "3": {
+            "count": 512,
+            "solve_rate": 0.375,
+            "valid_rate": 0.982421875
+          },
+          "4": {
+            "count": 512,
+            "solve_rate": 0.05859375,
+            "valid_rate": 0.96875
+          }
+        },
+        "complete": true,
+        "conditional_accuracy": 0.2222222222222222,
+        "correct_count": 222,
+        "count": 1024,
+        "error_counts": {
+          "invalid_syntax": 2,
+          "wrong_numbers": 23
+        },
+        "evaluation_mode": "greedy",
+        "expected_count": 1024,
+        "experiment_id": "sft_witness_seed_42",
+        "finish_reason_counts": {
+          "eos": 1024
+        },
+        "invalid_rate": 0.0244140625,
+        "max_new_tokens_rate": 0.0,
+        "mean_completion_tokens": 11.4443359375,
+        "mean_latency_seconds": 1.17523338105417,
+        "metric": "greedy_accuracy",
+        "predictions_path": "results/evaluations/sft_witness_seed_42/predictions_test_id_greedy.jsonl",
+        "solve_rate": 0.216796875,
+        "split": "test_id",
+        "updated_at_utc": "2026-10-14T12:31:42+00:00",
+        "valid_count": 999,
+        "valid_rate": 0.9755859375
+      },
+      "test_id_sampled": {
+        "complete": true,
+        "count": 256,
+        "evaluation_mode": "sampled_k4",
+        "expected_count": 256,
+        "experiment_id": "sft_witness_seed_42",
+        "mean_completion_tokens": 11.40234375,
+        "mean_latency_seconds": 1.1932444483400104,
+        "metric": "sampled_pass_at_k",
+        "pass_at_1": 0.171875,
+        "pass_at_k": 0.3203125,
+        "predictions_path": "results/evaluations/sft_witness_seed_42/predictions_test_id_sampled_k4.jsonl",
+        "samples_per_problem": 4,
+        "split": "test_id",
+        "updated_at_utc": "2026-10-14T12:52:26+00:00",
+        "valid_rate": 0.9033203125
+      },
+      "test_ood": {
+        "by_arity": {
+          "3": {
+            "count": 256,
+            "solve_rate": 0.359375,
+            "valid_rate": 1.0
+          },
+          "4": {
+            "count": 256,
+            "solve_rate": 0.08203125,
+            "valid_rate": 1.0
+          }
+        },
+        "complete": true,
+        "conditional_accuracy": 0.220703125,
+        "correct_count": 113,
+        "count": 512,
+        "error_counts": {},
+        "evaluation_mode": "greedy",
+        "expected_count": 512,
+        "experiment_id": "sft_witness_seed_42",
+        "finish_reason_counts": {
+          "eos": 512
+        },
+        "invalid_rate": 0.0,
+        "max_new_tokens_rate": 0.0,
+        "mean_completion_tokens": 12.5,
+        "mean_latency_seconds": 1.281826285156285,
+        "metric": "greedy_accuracy",
+        "predictions_path": "results/evaluations/sft_witness_seed_42/predictions_test_ood_greedy.jsonl",
+        "solve_rate": 0.220703125,
+        "split": "test_ood",
+        "updated_at_utc": "2026-10-14T13:03:33+00:00",
+        "valid_count": 512,
+        "valid_rate": 1.0
+      },
+      "test_ood_sampled": {
+        "complete": true,
+        "count": 128,
+        "evaluation_mode": "sampled_k4",
+        "expected_count": 128,
+        "experiment_id": "sft_witness_seed_42",
+        "mean_completion_tokens": 12.462890625,
+        "mean_latency_seconds": 1.3050948470709045,
+        "metric": "sampled_pass_at_k",
+        "pass_at_1": 0.16015625,
+        "pass_at_k": 0.40625,
+        "predictions_path": "results/evaluations/sft_witness_seed_42/predictions_test_ood_sampled_k4.jsonl",
+        "samples_per_problem": 4,
+        "split": "test_ood",
+        "updated_at_utc": "2026-10-14T13:14:52+00:00",
+        "valid_rate": 0.888671875
+      }
+    }
+  ],
+  "paired_bootstrap_vs_base": {
+    "42": {
+      "ci_95_lower": -0.00390625,
+      "ci_95_upper": 0.015625,
+      "mean_accuracy_difference": 0.005859375,
+      "n_paired": 1024
+    },
+    "43": null,
+    "44": null
+  },
+  "planned_experiments": [
+    "base_qwen25_15b",
+    "grpo_correct_seed_42",
+    "grpo_validity_seed_42",
+    "sft_witness_seed_42"
+  ],
+  "schema_version": 1,
+  "secondary_comparisons_vs_base": {
+    "grpo_validity_seed_42": {
+      "ci_95_lower": 0.083984375,
+      "ci_95_upper": 0.125,
+      "mean_accuracy_difference": 0.1044921875,
+      "n_paired": 1024
+    },
+    "sft_witness_seed_42": {
+      "ci_95_lower": 0.1806640625,
+      "ci_95_upper": 0.2333984375,
+      "mean_accuracy_difference": 0.20703125,
+      "n_paired": 1024
+    }
+  },
+  "three_seed_primary_estimate": null,
+  "training_runs": {
+    "grpo_correct_seed_42": "results/run_evidence/grpo_correct_seed_42",
+    "grpo_validity_seed_42": "results/run_evidence/grpo_validity_seed_42",
+    "sft_witness_seed_42": "results/run_evidence/sft_witness_seed_42"
+  }
+}

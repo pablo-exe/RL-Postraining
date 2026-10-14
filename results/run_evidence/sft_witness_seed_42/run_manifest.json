@@ -1,0 +1,292 @@
+{
+  "budget": {
+    "current_command": "final-sft-control",
+    "current_session_elapsed_hours": 1.3079122222222213,
+    "ledger": "accounting/gpu_budget.sqlite3",
+    "max_gpu_hours": 62.0,
+    "remaining_gpu_hours": 51.92001305555554,
+    "used_gpu_hours": 10.079986944444455
+  },
+  "completed_at_utc": "2026-10-14T08:07:18+00:00",
+  "configuration": {
+    "budget": {
+      "final_evaluation_hours": 10,
+      "final_training_hours": 56,
+      "final_training_margin_fraction": 0.2,
+      "gpu_hours_total": 72,
+      "holdout_first_grpo_seed": 42,
+      "holdout_probe_steps": 200,
+      "minimum_early_gain_percentage_points": 3.0,
+      "preflight_and_pilots_hours": 6,
+      "uninformative_group_min_accuracy": 0.05,
+      "uninformative_group_probe_size": 128
+    },
+    "data": {
+      "arities": [
+        3,
+        4
+      ],
+      "generation_batch_size_per_arity": [
+        2048,
+        2048
+      ],
+      "numbers_id_max": 30,
+      "numbers_id_min": 1,
+      "numbers_ood_max": 60,
+      "numbers_ood_min": 31,
+      "seed": 20261013,
+      "target_max": 100,
+      "target_min": 10,
+      "test_id_size": 1024,
+      "test_ood_size": 512,
+      "train_size": 4096,
+      "validation_size": 512
+    },
+    "evaluation": {
+      "bootstrap_samples": 10000,
+      "bootstrap_seed": 20261014,
+      "evaluation_tie_break_order": [
+        "accuracy_desc",
+        "invalid_rate_asc",
+        "step_asc"
+      ],
+      "greedy_batch_size": 1,
+      "greedy_max_new_tokens": 96,
+      "record_raw_completions": true,
+      "sampled_count": 4,
+      "sampled_temperature": 1.0,
+      "sampled_test_id_subset_size": 256,
+      "sampled_test_ood_subset_size": 128,
+      "sampled_top_k": 0,
+      "sampled_top_p": 1.0
+    },
+    "grpo": {
+      "ablation_seed": 42,
+      "beta": 0.01,
+      "curriculum_arity": 3,
+      "curriculum_first_phase_fraction": 0.25,
+      "curriculum_phase_evaluation_size": 128,
+      "dataloader_num_workers": 0,
+      "disable_dropout": true,
+      "enable_vllm": false,
+      "epsilon": 0.2,
+      "eval_subset_size": 128,
+      "final_seeds": [
+        42,
+        43,
+        44
+      ],
+      "final_step_candidates": [
+        1200,
+        800,
+        400
+      ],
+      "generation_batch_size": 4,
+      "generation_batch_size_fallback": 2,
+      "gradient_accumulation_steps": 16,
+      "gradient_checkpointing": true,
+      "learning_rate_candidates": [
+        0.0001,
+        0.0003
+      ],
+      "learning_rate_scheduler": "constant",
+      "logging_steps": 10,
+      "loss_type": "dr_grpo",
+      "mask_truncated_completions": false,
+      "max_completion_length": 96,
+      "max_grad_norm": 1.0,
+      "max_prompt_length": 256,
+      "num_generations": 4,
+      "num_generations_fallback": 2,
+      "num_iterations": 1,
+      "optimizer": "adamw_torch",
+      "per_device_train_batch_size": 1,
+      "pilot_seed": 101,
+      "pilot_steps": 100,
+      "reward_function": "exact_plus_validity",
+      "save_total_limit": null,
+      "scale_rewards": "none",
+      "smoke_steps": 8,
+      "steps_per_phase": 100,
+      "temperature": 1.0,
+      "top_k": 0,
+      "top_p": 1.0,
+      "warmup_steps": 0,
+      "weight_decay": 0.0
+    },
+    "lora": {
+      "bias": "none",
+      "lora_alpha": 32,
+      "lora_dropout": 0.0,
+      "r": 16,
+      "target_modules": [
+        "q_proj",
+        "k_proj",
+        "v_proj",
+        "o_proj",
+        "gate_proj",
+        "up_proj",
+        "down_proj"
+      ]
+    },
+    "project": {
+      "attn_implementation": "sdpa",
+      "data_root": "data",
+      "dtype": "bfloat16",
+      "model_id": "Qwen/Qwen2.5-1.5B-Instruct",
+      "model_revision": "989aa7980e4cf806f80c7fef2b1adb7bc71aa306",
+      "name": "countdown-direct-grpo",
+      "python_version": "3.11",
+      "results_root": "results",
+      "runs_root": "runs",
+      "tokenizer_revision": "989aa7980e4cf806f80c7fef2b1adb7bc71aa306",
+      "trust_remote_code": false
+    },
+    "prompt": {
+      "max_characters": 256,
+      "system": "You solve arithmetic puzzles. Use every supplied number exactly once. Use only +, -, *, / and parentheses. Intermediate fractions and negative values are allowed. Return a single arithmetic expression and nothing else."
+    },
+    "sft_control": {
+      "gradient_accumulation_steps": 4,
+      "learning_rate": 0.0001,
+      "learning_rate_scheduler": "constant",
+      "logging_steps": 10,
+      "mask_prompt_loss": true,
+      "max_length": 352,
+      "per_device_train_batch_size": 1,
+      "use_packing": false
+    },
+    "verifier": {
+      "allowed_operators": [
+        "+",
+        "-",
+        "*",
+        "/"
+      ],
+      "intermediate_values": "exact_rational",
+      "max_expression_characters": 256
+    }
+  },
+  "dataset_manifest": {
+    "dataset_sha256": "5b70aa24f0ce17b5da72c8031e39388126608e14cb82cd563a47983e52b57363",
+    "problem_sha256": {
+      "test_id": "4085cd9800c8fc52288a778ffefb7127d9155c3158ca92f015f8fae78201580a",
+      "test_ood": "13fc171df5f5df1964553cb4dc3bcc64d0ada001e30227ef45e8ed4b440e07c2",
+      "train": "857bb64f2ad9efca3af9ca4e3e12a1903d7ac5372d51ae7d3060578951cf2697",
+      "validation": "69a0d012e4e38a055819d23f8a645f84495df7907bd8c5d9c53d55f395f12a47"
+    },
+    "schema_version": 1,
+    "seed": 20261013,
+    "solver_version": "fraction-subset-dp-v1",
+    "split_counts": {
+      "test_id": 1024,
+      "test_ood": 512,
+      "train": 4096,
+      "validation": 512
+    },
+    "witness_sha256": {
+      "test_id": "df1c83370eab6972498e007445c0b1b3806f4f2a4d96b9e82cff804d918d11ae",
+      "test_ood": "cc02260b6240a7d5972da01e11e7c8599f7d01e94fe6474f4b923cf041db2608",
+      "train": "e7e23f1980ca4e1e275038741a3dc929bc0d3597f7c4b90df5d549f04c39223a",
+      "validation": "06f173f7c7deea72e995e67d9675cf1d7b901d01eceef17c9c68a84c3840ceb5"
+    }
+  },
+  "experiment_id": "sft_witness_seed_42",
+  "git_revision": "234548b6ddf6d1e64a455fbce78f51f80b8319c6",
+  "hardware": {
+    "bf16_supported": true,
+    "checks": {
+      "cuda_available": true,
+      "device_count": 1,
+      "torch": "2.8.0+cu128"
+    },
+    "cuda_runtime_version": "12.8",
+    "device": "NVIDIA GeForce RTX 4070 Laptop GPU",
+    "free_memory_gib": 6.863,
+    "nvidia_smi": "NVIDIA GeForce RTX 4070 Laptop GPU, 8188 MiB, 7796 MiB, 617.14",
+    "ok": true,
+    "total_memory_gib": 7.996
+  },
+  "learning_rate": 0.0001,
+  "max_train_steps": 1200,
+  "method": "sft",
+  "model_id": "Qwen/Qwen2.5-1.5B-Instruct",
+  "model_revision": "989aa7980e4cf806f80c7fef2b1adb7bc71aa306",
+  "phase_runs": [
+    {
+      "adapter_sha256": "f7695c90892918fa8c06bf754b2dcac13c2b93c8b03447139379a5fe88cf6112",
+      "completed_at_utc": "2026-10-14T07:08:29+00:00",
+      "completed_steps": 300,
+      "peak_memory_allocated_gib": 3.4084811210632324,
+      "peak_memory_reserved_gib": 3.76171875,
+      "phase": "phase-01",
+      "requested_steps": 300,
+      "start_global_step": 0,
+      "total_parameters": 1562179072,
+      "train_samples_per_second": 1.059,
+      "train_wall_seconds": 1133.6294462999795,
+      "trainable_parameter_fraction": 0.011819879251333359,
+      "trainable_parameters": 18464768
+    },
+    {
+      "adapter_sha256": "8efb58bcbf9b2badb7bf16d0a3059e80d1b065066a5a6d543e377c168d1c74de",
+      "completed_at_utc": "2026-10-14T08:07:18+00:00",
+      "completed_steps": 900,
+      "peak_memory_allocated_gib": 6.042468070983887,
+      "peak_memory_reserved_gib": 6.169921875,
+      "phase": "phase-02",
+      "requested_steps": 900,
+      "start_global_step": 300,
+      "total_parameters": 1562179072,
+      "train_samples_per_second": 1.022,
+      "train_wall_seconds": 3521.0124892999884,
+      "trainable_parameter_fraction": 0.011819879251333359,
+      "trainable_parameters": 18464768
+    }
+  ],
+  "prompt_loss_masking": "prompt token labels set to -100; completion and EOS labels train",
+  "python": "3.11.9 (tags/v3.11.9:de54cf5, Apr  2 2024, 10:12:12) [MSC v.1938 64 bit (AMD64)]",
+  "reference_witness_count": 4096,
+  "run_id": "20261014T064929Z-1123c0",
+  "schema_version": 1,
+  "seed": 42,
+  "selected_checkpoint": {
+    "adapter_path": "runs/experiments/sft_witness_seed_42/20261014T064929Z-1123c0/adapter_selected",
+    "checkpoint_tag": "phase-02-checkpoint-500",
+    "global_step": 800,
+    "metrics": {
+      "by_arity": {
+        "3": {
+          "count": 64,
+          "solve_rate": 0.421875,
+          "valid_rate": 0.984375
+        },
+        "4": {
+          "count": 64,
+          "solve_rate": 0.078125,
+          "valid_rate": 0.953125
+        }
+      },
+      "correct_count": 32,
+      "count": 128,
+      "invalid_rate": 0.03125,
+      "solve_rate": 0.25,
+      "valid_count": 124,
+      "valid_rate": 0.96875
+    },
+    "phase": "phase-02"
+  },
+  "selected_learning_rate_pilot": null,
+  "software_versions": {
+    "accelerate": "1.10.1",
+    "datasets": "4.1.1",
+    "peft": "0.17.1",
+    "python": "3.11.9",
+    "torch": "2.8.0+cu128",
+    "transformers": "4.56.2",
+    "trl": "0.23.1"
+  },
+  "started_at_utc": "2026-10-14T06:49:29+00:00",
+  "status": "completed",
+  "tokenizer_revision": "989aa7980e4cf806f80c7fef2b1adb7bc71aa306"
+}

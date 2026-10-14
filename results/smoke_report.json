@@ -1,0 +1,83 @@
+{
+  "adapter_changed_in_each_phase": true,
+  "adapter_reload_passed": true,
+  "baseline_validation": {
+    "by_arity": {
+      "3": {
+        "count": 64,
+        "solve_rate": 0.015625,
+        "valid_rate": 0.140625
+      },
+      "4": {
+        "count": 64,
+        "solve_rate": 0.0,
+        "valid_rate": 0.15625
+      }
+    },
+    "correct_count": 1,
+    "count": 128,
+    "invalid_rate": 0.8515625,
+    "solve_rate": 0.0078125,
+    "valid_count": 19,
+    "valid_rate": 0.1484375
+  },
+  "completed_steps": 8,
+  "experiment_id": "smoke_direct_grpo_shaped_v2_seed_42",
+  "finite_training_metrics": true,
+  "note": "Within-group reward variation was observed in the smoke run.",
+  "reload_probe": {
+    "arity": 3,
+    "completion": "(2 * (3 + 7))",
+    "completion_token_count": 10,
+    "correct": true,
+    "error_code": null,
+    "finish_reason": "eos",
+    "latency_seconds": 1.5611340999603271,
+    "normalized_expression": "(2 * (3 + 7))",
+    "nums": [
+      2,
+      3,
+      7
+    ],
+    "problem_id": "smoke-reload",
+    "split": "validation",
+    "target": 20,
+    "valid": true,
+    "value_denominator": 1,
+    "value_numerator": 20
+  },
+  "requested_steps": 8,
+  "resume_test_passed": true,
+  "rollouts": {
+    "completion_count": 128,
+    "groups_with_positive_reward": 26,
+    "positive_group_rate": 0.8125,
+    "reward_groups": 32,
+    "reward_variation_rate": 0.65625,
+    "reward_varying_groups": 21
+  },
+  "runtime_overrides": {},
+  "sampled_base_weights_unchanged": true,
+  "smoke_validation": {
+    "by_arity": {
+      "3": {
+        "count": 8,
+        "solve_rate": 0.0,
+        "valid_rate": 0.875
+      },
+      "4": {
+        "count": 8,
+        "solve_rate": 0.0,
+        "valid_rate": 0.875
+      }
+    },
+    "correct_count": 0,
+    "count": 16,
+    "invalid_rate": 0.125,
+    "solve_rate": 0.0,
+    "valid_count": 14,
+    "valid_rate": 0.875
+  },
+  "status": "completed",
+  "validation_subset_size": 16
+}

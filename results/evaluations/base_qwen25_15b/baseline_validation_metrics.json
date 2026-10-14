@@ -1,0 +1,20 @@
+{
+  "by_arity": {
+    "3": {
+      "count": 64,
+      "solve_rate": 0.015625,
+      "valid_rate": 0.140625
+    },
+    "4": {
+      "count": 64,
+      "solve_rate": 0.0,
+      "valid_rate": 0.15625
+    }
+  },
+  "correct_count": 1,
+  "count": 128,
+  "invalid_rate": 0.8515625,
+  "solve_rate": 0.0078125,
+  "valid_count": 19,
+  "valid_rate": 0.1484375
+}

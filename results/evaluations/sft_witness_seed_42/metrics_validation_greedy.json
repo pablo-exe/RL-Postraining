@@ -1,0 +1,39 @@
+{
+  "by_arity": {
+    "3": {
+      "count": 256,
+      "solve_rate": 0.390625,
+      "valid_rate": 0.9921875
+    },
+    "4": {
+      "count": 256,
+      "solve_rate": 0.05078125,
+      "valid_rate": 0.9453125
+    }
+  },
+  "complete": true,
+  "conditional_accuracy": 0.22782258064516128,
+  "correct_count": 113,
+  "count": 512,
+  "error_counts": {
+    "invalid_syntax": 3,
+    "wrong_numbers": 13
+  },
+  "evaluation_mode": "greedy",
+  "expected_count": 512,
+  "experiment_id": "sft_witness_seed_42",
+  "finish_reason_counts": {
+    "eos": 512
+  },
+  "invalid_rate": 0.03125,
+  "max_new_tokens_rate": 0.0,
+  "mean_completion_tokens": 11.482421875,
+  "mean_latency_seconds": 1.1781252416009238,
+  "metric": "greedy_accuracy",
+  "predictions_path": "results/evaluations/sft_witness_seed_42/predictions_validation_greedy.jsonl",
+  "solve_rate": 0.220703125,
+  "split": "validation",
+  "updated_at_utc": "2026-10-14T12:11:16+00:00",
+  "valid_count": 496,
+  "valid_rate": 0.96875
+}

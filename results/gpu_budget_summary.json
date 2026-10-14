@@ -1,0 +1,8 @@
+{
+  "max_gpu_hours": 72.0,
+  "used_gpu_hours": 15.208532777777776,
+  "remaining_gpu_hours": 56.791467222222224,
+  "current_command": "local-prediction",
+  "current_session_elapsed_hours": 0.0,
+  "ledger": "accounting/gpu_budget.sqlite3"
+}

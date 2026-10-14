@@ -1,0 +1,17 @@
+{
+  "complete": true,
+  "count": 256,
+  "evaluation_mode": "sampled_k4",
+  "expected_count": 256,
+  "experiment_id": "grpo_correct_seed_42",
+  "mean_completion_tokens": 13.298828125,
+  "mean_latency_seconds": 1.3874170994139376,
+  "metric": "sampled_pass_at_k",
+  "pass_at_1": 0.015625,
+  "pass_at_k": 0.015625,
+  "predictions_path": "results/evaluations/grpo_correct_seed_42/predictions_test_id_sampled_k4.jsonl",
+  "samples_per_problem": 4,
+  "split": "test_id",
+  "updated_at_utc": "2026-10-14T10:07:40+00:00",
+  "valid_rate": 0.6865234375
+}

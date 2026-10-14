@@ -1,0 +1,115 @@
+{
+  "calibrated_at_utc": "2026-10-13T23:38:21Z",
+  "measured_profile": {
+    "model_load_seconds_per_run": 13.777199500007555,
+    "pilot_grpo_seconds_per_step": 15.216771305999426,
+    "sft_seconds_per_step": 2.6456412375046057,
+    "validation_seconds_per_checkpoint": 163.0390405500366
+  },
+  "pilot_comparison": [
+    {
+      "experiment_id": "pilot_lr_1e_04",
+      "learning_rate": 0.0001,
+      "rollouts": {
+        "completion_count": 1600,
+        "groups_with_positive_reward": 394,
+        "positive_group_rate": 0.985,
+        "reward_groups": 400,
+        "reward_variation_rate": 0.435,
+        "reward_varying_groups": 174
+      },
+      "validation": {
+        "by_arity": {
+          "3": {
+            "count": 64,
+            "solve_rate": 0.109375,
+            "valid_rate": 1.0
+          },
+          "4": {
+            "count": 64,
+            "solve_rate": 0.015625,
+            "valid_rate": 0.59375
+          }
+        },
+        "correct_count": 8,
+        "count": 128,
+        "invalid_rate": 0.203125,
+        "solve_rate": 0.0625,
+        "valid_count": 102,
+        "valid_rate": 0.796875
+      }
+    },
+    {
+      "experiment_id": "pilot_lr_3e_04",
+      "learning_rate": 0.0003,
+      "rollouts": {
+        "completion_count": 1600,
+        "groups_with_positive_reward": 363,
+        "positive_group_rate": 0.9075,
+        "reward_groups": 400,
+        "reward_variation_rate": 0.3925,
+        "reward_varying_groups": 157
+      },
+      "validation": {
+        "by_arity": {
+          "3": {
+            "count": 64,
+            "solve_rate": 0.21875,
+            "valid_rate": 0.671875
+          },
+          "4": {
+            "count": 64,
+            "solve_rate": 0.078125,
+            "valid_rate": 0.515625
+          }
+        },
+        "correct_count": 19,
+        "count": 128,
+        "invalid_rate": 0.40625,
+        "solve_rate": 0.1484375,
+        "valid_count": 76,
+        "valid_rate": 0.59375
+      }
+    }
+  ],
+  "preflight_budget": {
+    "current_command": "pilot-calibration",
+    "current_session_elapsed_hours": 1.2419183333333381,
+    "ledger": "accounting/gpu_budget.sqlite3",
+    "max_gpu_hours": 6.0,
+    "remaining_gpu_hours": 4.349578888888872,
+    "used_gpu_hours": 1.6504211111111282
+  },
+  "project_fingerprint": "9e3745af0fc18c5d127fab5a96476f9c855686fdefdda7f15d499556da8d083c",
+  "schema_version": 1,
+  "selected_final_step_plan": {
+    "forecast": {
+      "grpo_runs": 4.0,
+      "grpo_seconds": 80921.48501319904,
+      "sft_runs": 1.0,
+      "sft_seconds": 5145.015171105973,
+      "total_seconds": 86066.50018430501,
+      "validation_checkpoints_per_run": 12.0
+    },
+    "margin_fraction": 0.2,
+    "reserve_seconds": 201600.0,
+    "run_sft_control": true,
+    "run_validity_ablation": true,
+    "selected_at_utc": "2026-10-13T23:38:21+00:00",
+    "selected_grpo_seeds": [
+      42,
+      43,
+      44
+    ],
+    "selected_steps_per_experiment": 1200,
+    "single_grpo_seed_only": false
+  },
+  "selected_final_steps": 1200,
+  "selected_learning_rate": 0.0003,
+  "selected_learning_rate_pilot": "pilot_lr_3e_04",
+  "sft_calibration": {
+    "experiment_id": "pilot_sft_calibration_seed_42",
+    "run_directory": "runs/experiments/pilot_sft_calibration_seed_42/20261013T233159Z-eb5792",
+    "steps": 8
+  }
+}

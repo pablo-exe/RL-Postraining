@@ -1,0 +1,17 @@
+{
+  "complete": true,
+  "count": 256,
+  "evaluation_mode": "sampled_k4",
+  "expected_count": 256,
+  "experiment_id": "base_qwen25_15b",
+  "mean_completion_tokens": 20.9345703125,
+  "mean_latency_seconds": 1.0752241718735718,
+  "metric": "sampled_pass_at_k",
+  "pass_at_1": 0.0087890625,
+  "pass_at_k": 0.02734375,
+  "predictions_path": "results/evaluations/base_qwen25_15b/predictions_test_id_sampled_k4.jsonl",
+  "samples_per_problem": 4,
+  "split": "test_id",
+  "updated_at_utc": "2026-10-14T08:50:21+00:00",
+  "valid_rate": 0.1484375
+}

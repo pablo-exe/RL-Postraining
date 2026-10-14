@@ -1,0 +1,20 @@
+{
+  "accuracy_change_percentage_points": -0.78125,
+  "available": true,
+  "baseline_validation_accuracy": 0.0078125,
+  "continue_all_seeds": false,
+  "minimum_gain_percentage_points": 3.0,
+  "minimum_positive_group_rate": 0.05,
+  "note": "Keep the completed seed-42 model as a measured pilot result; prioritize controls and honest evaluation.",
+  "probe_global_step": 200,
+  "probe_validation_accuracy": 0.0,
+  "reward_signal": true,
+  "rollout_statistics": {
+    "completion_count": 516,
+    "groups_with_positive_reward": 123,
+    "positive_group_rate": 0.9534883720930233,
+    "reward_groups": 129,
+    "reward_variation_rate": 0.2713178294573643,
+    "reward_varying_groups": 35
+  }
+}

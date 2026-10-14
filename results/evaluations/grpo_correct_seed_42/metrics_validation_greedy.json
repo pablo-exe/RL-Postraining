@@ -1,0 +1,38 @@
+{
+  "by_arity": {
+    "3": {
+      "count": 256,
+      "solve_rate": 0.01953125,
+      "valid_rate": 1.0
+    },
+    "4": {
+      "count": 256,
+      "solve_rate": 0.0,
+      "valid_rate": 0.31640625
+    }
+  },
+  "complete": true,
+  "conditional_accuracy": 0.01483679525222552,
+  "correct_count": 5,
+  "count": 512,
+  "error_counts": {
+    "wrong_numbers": 175
+  },
+  "evaluation_mode": "greedy",
+  "expected_count": 512,
+  "experiment_id": "grpo_correct_seed_42",
+  "finish_reason_counts": {
+    "eos": 512
+  },
+  "invalid_rate": 0.341796875,
+  "max_new_tokens_rate": 0.0,
+  "mean_completion_tokens": 13.123046875,
+  "mean_latency_seconds": 1.3399430589855683,
+  "metric": "greedy_accuracy",
+  "predictions_path": "results/evaluations/grpo_correct_seed_42/predictions_validation_greedy.jsonl",
+  "solve_rate": 0.009765625,
+  "split": "validation",
+  "updated_at_utc": "2026-10-14T09:20:32+00:00",
+  "valid_count": 337,
+  "valid_rate": 0.658203125
+}

@@ -1,0 +1,17 @@
+{
+  "complete": true,
+  "count": 256,
+  "evaluation_mode": "sampled_k4",
+  "expected_count": 256,
+  "experiment_id": "sft_witness_seed_42",
+  "mean_completion_tokens": 11.40234375,
+  "mean_latency_seconds": 1.1932444483400104,
+  "metric": "sampled_pass_at_k",
+  "pass_at_1": 0.171875,
+  "pass_at_k": 0.3203125,
+  "predictions_path": "results/evaluations/sft_witness_seed_42/predictions_test_id_sampled_k4.jsonl",
+  "samples_per_problem": 4,
+  "split": "test_id",
+  "updated_at_utc": "2026-10-14T12:52:26+00:00",
+  "valid_rate": 0.9033203125
+}

@@ -1,0 +1,39 @@
+{
+  "by_arity": {
+    "3": {
+      "count": 256,
+      "solve_rate": 0.0078125,
+      "valid_rate": 0.06640625
+    },
+    "4": {
+      "count": 256,
+      "solve_rate": 0.0,
+      "valid_rate": 0.20703125
+    }
+  },
+  "complete": true,
+  "conditional_accuracy": 0.02857142857142857,
+  "correct_count": 2,
+  "count": 512,
+  "error_counts": {
+    "invalid_characters": 347,
+    "wrong_numbers": 95
+  },
+  "evaluation_mode": "greedy",
+  "expected_count": 512,
+  "experiment_id": "base_qwen25_15b",
+  "finish_reason_counts": {
+    "eos": 512
+  },
+  "invalid_rate": 0.86328125,
+  "max_new_tokens_rate": 0.0,
+  "mean_completion_tokens": 19.5,
+  "mean_latency_seconds": 0.9933253246093727,
+  "metric": "greedy_accuracy",
+  "predictions_path": "results/evaluations/base_qwen25_15b/predictions_test_ood_greedy.jsonl",
+  "solve_rate": 0.00390625,
+  "split": "test_ood",
+  "updated_at_utc": "2026-10-14T08:58:54+00:00",
+  "valid_count": 70,
+  "valid_rate": 0.13671875
+}

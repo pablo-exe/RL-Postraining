@@ -1,0 +1,953 @@
+{
+  "project_fingerprint": "9e3745af0fc18c5d127fab5a96476f9c855686fdefdda7f15d499556da8d083c",
+  "runs": {
+    "pilot_lr_1e_04": {
+      "experiment_id": "pilot_lr_1e_04",
+      "learning_rate": 0.0001,
+      "manifest": {
+        "budget": {
+          "current_command": "pilot-calibration",
+          "current_session_elapsed_hours": 0.567608611111112,
+          "ledger": "accounting/gpu_budget.sqlite3",
+          "max_gpu_hours": 6.0,
+          "remaining_gpu_hours": 5.023888611111098,
+          "used_gpu_hours": 0.976111388888902
+        },
+        "completed_at_utc": "2026-10-13T22:57:53+00:00",
+        "configuration": {
+          "budget": {
+            "final_evaluation_hours": 10,
+            "final_training_hours": 56,
+            "final_training_margin_fraction": 0.2,
+            "gpu_hours_total": 72,
+            "holdout_first_grpo_seed": 42,
+            "holdout_probe_steps": 200,
+            "minimum_early_gain_percentage_points": 3.0,
+            "preflight_and_pilots_hours": 6,
+            "uninformative_group_min_accuracy": 0.05,
+            "uninformative_group_probe_size": 128
+          },
+          "data": {
+            "arities": [
+              3,
+              4
+            ],
+            "generation_batch_size_per_arity": [
+              2048,
+              2048
+            ],
+            "numbers_id_max": 30,
+            "numbers_id_min": 1,
+            "numbers_ood_max": 60,
+            "numbers_ood_min": 31,
+            "seed": 20261013,
+            "target_max": 100,
+            "target_min": 10,
+            "test_id_size": 1024,
+            "test_ood_size": 512,
+            "train_size": 4096,
+            "validation_size": 512
+          },
+          "evaluation": {
+            "bootstrap_samples": 10000,
+            "bootstrap_seed": 20261014,
+            "evaluation_tie_break_order": [
+              "accuracy_desc",
+              "invalid_rate_asc",
+              "step_asc"
+            ],
+            "greedy_batch_size": 1,
+            "greedy_max_new_tokens": 96,
+            "record_raw_completions": true,
+            "sampled_count": 4,
+            "sampled_temperature": 1.0,
+            "sampled_test_id_subset_size": 256,
+            "sampled_test_ood_subset_size": 128,
+            "sampled_top_k": 0,
+            "sampled_top_p": 1.0
+          },
+          "grpo": {
+            "ablation_seed": 42,
+            "beta": 0.01,
+            "curriculum_arity": 3,
+            "curriculum_first_phase_fraction": 0.25,
+            "curriculum_phase_evaluation_size": 128,
+            "dataloader_num_workers": 0,
+            "disable_dropout": true,
+            "enable_vllm": false,
+            "epsilon": 0.2,
+            "eval_subset_size": 128,
+            "final_seeds": [
+              42,
+              43,
+              44
+            ],
+            "final_step_candidates": [
+              1200,
+              800,
+              400
+            ],
+            "generation_batch_size": 4,
+            "generation_batch_size_fallback": 2,
+            "gradient_accumulation_steps": 16,
+            "gradient_checkpointing": true,
+            "learning_rate_candidates": [
+              0.0001,
+              0.0003
+            ],
+            "learning_rate_scheduler": "constant",
+            "logging_steps": 10,
+            "loss_type": "dr_grpo",
+            "mask_truncated_completions": false,
+            "max_completion_length": 96,
+            "max_grad_norm": 1.0,
+            "max_prompt_length": 256,
+            "num_generations": 4,
+            "num_generations_fallback": 2,
+            "num_iterations": 1,
+            "optimizer": "adamw_torch",
+            "per_device_train_batch_size": 1,
+            "pilot_seed": 101,
+            "pilot_steps": 100,
+            "reward_function": "exact_plus_validity",
+            "save_total_limit": null,
+            "scale_rewards": "none",
+            "smoke_steps": 8,
+            "steps_per_phase": 100,
+            "temperature": 1.0,
+            "top_k": 0,
+            "top_p": 1.0,
+            "warmup_steps": 0,
+            "weight_decay": 0.0
+          },
+          "lora": {
+            "bias": "none",
+            "lora_alpha": 32,
+            "lora_dropout": 0.0,
+            "r": 16,
+            "target_modules": [
+              "q_proj",
+              "k_proj",
+              "v_proj",
+              "o_proj",
+              "gate_proj",
+              "up_proj",
+              "down_proj"
+            ]
+          },
+          "project": {
+            "attn_implementation": "sdpa",
+            "data_root": "data",
+            "dtype": "bfloat16",
+            "model_id": "Qwen/Qwen2.5-1.5B-Instruct",
+            "model_revision": "989aa7980e4cf806f80c7fef2b1adb7bc71aa306",
+            "name": "countdown-direct-grpo",
+            "python_version": "3.11",
+            "results_root": "results",
+            "runs_root": "runs",
+            "tokenizer_revision": "989aa7980e4cf806f80c7fef2b1adb7bc71aa306",
+            "trust_remote_code": false
+          },
+          "prompt": {
+            "max_characters": 256,
+            "system": "You solve arithmetic puzzles. Use every supplied number exactly once. Use only +, -, *, / and parentheses. Intermediate fractions and negative values are allowed. Return a single arithmetic expression and nothing else."
+          },
+          "sft_control": {
+            "gradient_accumulation_steps": 4,
+            "learning_rate": 0.0001,
+            "learning_rate_scheduler": "constant",
+            "logging_steps": 10,
+            "mask_prompt_loss": true,
+            "max_length": 352,
+            "per_device_train_batch_size": 1,
+            "use_packing": false
+          },
+          "verifier": {
+            "allowed_operators": [
+              "+",
+              "-",
+              "*",
+              "/"
+            ],
+            "intermediate_values": "exact_rational",
+            "max_expression_characters": 256
+          }
+        },
+        "curriculum": {
+          "initial_arity": 3,
+          "initial_phase_fraction": 0.25
+        },
+        "dataset_manifest": {
+          "dataset_sha256": "5b70aa24f0ce17b5da72c8031e39388126608e14cb82cd563a47983e52b57363",
+          "problem_sha256": {
+            "test_id": "4085cd9800c8fc52288a778ffefb7127d9155c3158ca92f015f8fae78201580a",
+            "test_ood": "13fc171df5f5df1964553cb4dc3bcc64d0ada001e30227ef45e8ed4b440e07c2",
+            "train": "857bb64f2ad9efca3af9ca4e3e12a1903d7ac5372d51ae7d3060578951cf2697",
+            "validation": "69a0d012e4e38a055819d23f8a645f84495df7907bd8c5d9c53d55f395f12a47"
+          },
+          "schema_version": 1,
+          "seed": 20261013,
+          "solver_version": "fraction-subset-dp-v1",
+          "split_counts": {
+            "test_id": 1024,
+            "test_ood": 512,
+            "train": 4096,
+            "validation": 512
+          },
+          "witness_sha256": {
+            "test_id": "df1c83370eab6972498e007445c0b1b3806f4f2a4d96b9e82cff804d918d11ae",
+            "test_ood": "cc02260b6240a7d5972da01e11e7c8599f7d01e94fe6474f4b923cf041db2608",
+            "train": "e7e23f1980ca4e1e275038741a3dc929bc0d3597f7c4b90df5d549f04c39223a",
+            "validation": "06f173f7c7deea72e995e67d9675cf1d7b901d01eceef17c9c68a84c3840ceb5"
+          }
+        },
+        "experiment_id": "pilot_lr_1e_04",
+        "git_revision": "e066d8a26fc9322f751e2cbb524940eea2372799",
+        "hardware": {
+          "bf16_supported": true,
+          "checks": {
+            "cuda_available": true,
+            "device_count": 1,
+            "torch": "2.8.0+cu128"
+          },
+          "cuda_runtime_version": "12.8",
+          "device": "NVIDIA GeForce RTX 4070 Laptop GPU",
+          "free_memory_gib": 6.863,
+          "nvidia_smi": "NVIDIA GeForce RTX 4070 Laptop GPU, 8188 MiB, 7796 MiB, 617.14",
+          "ok": true,
+          "total_memory_gib": 7.996
+        },
+        "learning_rate": 0.0001,
+        "max_train_steps": 100,
+        "method": "grpo",
+        "model_id": "Qwen/Qwen2.5-1.5B-Instruct",
+        "model_revision": "989aa7980e4cf806f80c7fef2b1adb7bc71aa306",
+        "phase_runs": [
+          {
+            "adapter_sha256_after": "43cb679c1b14a63291b3cb26c0378dea1a3cb77be2ddbafcdb46fb8b21ecf795",
+            "adapter_sha256_before": "29822f54efd8be8ba45f1171a2d976aeaec9346945baba39a385f80ad796abd0",
+            "completed_at_utc": "2026-10-13T22:32:22+00:00",
+            "completed_steps": 25,
+            "frozen_base_probe_sha256_after": "9efbfd3d9b9d4054d3fbec51a4963643eed49c805ead422f377b1943d81c986d",
+            "frozen_base_probe_sha256_before": "9efbfd3d9b9d4054d3fbec51a4963643eed49c805ead422f377b1943d81c986d",
+            "peak_memory_allocated_gib": 3.235203742980957,
+            "peak_memory_reserved_gib": 3.32421875,
+            "phase": "phase-01",
+            "phase_complete": true,
+            "requested_steps": 25,
+            "resumed_from_checkpoint": null,
+            "reward_kind": "exact_plus_validity",
+            "start_global_step": 0,
+            "total_parameters": 1562179072,
+            "train_samples_seen": 0.807,
+            "train_wall_seconds": 495.7701166999759,
+            "trainable_parameter_fraction": 0.011819879251333359,
+            "trainable_parameters": 18464768,
+            "training_problems": 2048
+          },
+          {
+            "adapter_sha256_after": "8c0a78606d4bb0e982647394a5870c2ba1f7999632b240b2d44672a495f42da4",
+            "adapter_sha256_before": "43cb679c1b14a63291b3cb26c0378dea1a3cb77be2ddbafcdb46fb8b21ecf795",
+            "completed_at_utc": "2026-10-13T22:57:53+00:00",
+            "completed_steps": 75,
+            "frozen_base_probe_sha256_after": "9efbfd3d9b9d4054d3fbec51a4963643eed49c805ead422f377b1943d81c986d",
+            "frozen_base_probe_sha256_before": "9efbfd3d9b9d4054d3fbec51a4963643eed49c805ead422f377b1943d81c986d",
+            "peak_memory_allocated_gib": 5.904227256774902,
+            "peak_memory_reserved_gib": 6.126953125,
+            "phase": "phase-02",
+            "phase_complete": true,
+            "requested_steps": 75,
+            "resumed_from_checkpoint": null,
+            "reward_kind": "exact_plus_validity",
+            "start_global_step": 25,
+            "total_parameters": 1562179072,
+            "train_samples_seen": 0.787,
+            "train_wall_seconds": 1524.796260299976,
+            "trainable_parameter_fraction": 0.011819879251333359,
+            "trainable_parameters": 18464768,
+            "training_problems": 4096
+          }
+        ],
+        "pilot": true,
+        "probe_accepted": false,
+        "python": "3.11.9 (tags/v3.11.9:de54cf5, Apr  2 2024, 10:12:12) [MSC v.1938 64 bit (AMD64)]",
+        "reward_group_statistics": {
+          "completion_count": 1600,
+          "groups_with_positive_reward": 394,
+          "positive_group_rate": 0.985,
+          "reward_groups": 400,
+          "reward_variation_rate": 0.435,
+          "reward_varying_groups": 174
+        },
+        "reward_kind": "exact_plus_validity",
+        "run_id": "20261013T222400Z-a8aba9",
+        "schema_version": 1,
+        "seed": 101,
+        "selected_checkpoint": {
+          "adapter_path": "runs/experiments/pilot_lr_1e_04/20261013T222400Z-a8aba9/adapter_selected",
+          "checkpoint_tag": "phase-01-checkpoint-25",
+          "global_step": 25,
+          "metrics": {
+            "by_arity": {
+              "3": {
+                "count": 64,
+                "solve_rate": 0.109375,
+                "valid_rate": 1.0
+              },
+              "4": {
+                "count": 64,
+                "solve_rate": 0.015625,
+                "valid_rate": 0.59375
+              }
+            },
+            "correct_count": 8,
+            "count": 128,
+            "invalid_rate": 0.203125,
+            "solve_rate": 0.0625,
+            "valid_count": 102,
+            "valid_rate": 0.796875
+          },
+          "phase": "phase-01"
+        },
+        "selected_learning_rate_pilot": "pilot_lr_1e_04",
+        "software_versions": {
+          "accelerate": "1.10.1",
+          "datasets": "4.1.1",
+          "peft": "0.17.1",
+          "python": "3.11.9",
+          "torch": "2.8.0+cu128",
+          "transformers": "4.56.2",
+          "trl": "0.23.1"
+        },
+        "started_at_utc": "2026-10-13T22:24:00+00:00",
+        "status": "completed",
+        "tokenizer_revision": "989aa7980e4cf806f80c7fef2b1adb7bc71aa306"
+      },
+      "outer_seconds": 2043.4384732999606,
+      "run_directory": "runs/experiments/pilot_lr_1e_04/20261013T222400Z-a8aba9"
+    },
+    "pilot_lr_3e_04": {
+      "experiment_id": "pilot_lr_3e_04",
+      "learning_rate": 0.0003,
+      "manifest": {
+        "budget": {
+          "current_command": "pilot-calibration",
+          "current_session_elapsed_hours": 1.1359505555555613,
+          "ledger": "accounting/gpu_budget.sqlite3",
+          "max_gpu_hours": 6.0,
+          "remaining_gpu_hours": 4.455546666666649,
+          "used_gpu_hours": 1.5444533333333512
+        },
+        "completed_at_utc": "2026-10-13T23:31:59+00:00",
+        "configuration": {
+          "budget": {
+            "final_evaluation_hours": 10,
+            "final_training_hours": 56,
+            "final_training_margin_fraction": 0.2,
+            "gpu_hours_total": 72,
+            "holdout_first_grpo_seed": 42,
+            "holdout_probe_steps": 200,
+            "minimum_early_gain_percentage_points": 3.0,
+            "preflight_and_pilots_hours": 6,
+            "uninformative_group_min_accuracy": 0.05,
+            "uninformative_group_probe_size": 128
+          },
+          "data": {
+            "arities": [
+              3,
+              4
+            ],
+            "generation_batch_size_per_arity": [
+              2048,
+              2048
+            ],
+            "numbers_id_max": 30,
+            "numbers_id_min": 1,
+            "numbers_ood_max": 60,
+            "numbers_ood_min": 31,
+            "seed": 20261013,
+            "target_max": 100,
+            "target_min": 10,
+            "test_id_size": 1024,
+            "test_ood_size": 512,
+            "train_size": 4096,
+            "validation_size": 512
+          },
+          "evaluation": {
+            "bootstrap_samples": 10000,
+            "bootstrap_seed": 20261014,
+            "evaluation_tie_break_order": [
+              "accuracy_desc",
+              "invalid_rate_asc",
+              "step_asc"
+            ],
+            "greedy_batch_size": 1,
+            "greedy_max_new_tokens": 96,
+            "record_raw_completions": true,
+            "sampled_count": 4,
+            "sampled_temperature": 1.0,
+            "sampled_test_id_subset_size": 256,
+            "sampled_test_ood_subset_size": 128,
+            "sampled_top_k": 0,
+            "sampled_top_p": 1.0
+          },
+          "grpo": {
+            "ablation_seed": 42,
+            "beta": 0.01,
+            "curriculum_arity": 3,
+            "curriculum_first_phase_fraction": 0.25,
+            "curriculum_phase_evaluation_size": 128,
+            "dataloader_num_workers": 0,
+            "disable_dropout": true,
+            "enable_vllm": false,
+            "epsilon": 0.2,
+            "eval_subset_size": 128,
+            "final_seeds": [
+              42,
+              43,
+              44
+            ],
+            "final_step_candidates": [
+              1200,
+              800,
+              400
+            ],
+            "generation_batch_size": 4,
+            "generation_batch_size_fallback": 2,
+            "gradient_accumulation_steps": 16,
+            "gradient_checkpointing": true,
+            "learning_rate_candidates": [
+              0.0001,
+              0.0003
+            ],
+            "learning_rate_scheduler": "constant",
+            "logging_steps": 10,
+            "loss_type": "dr_grpo",
+            "mask_truncated_completions": false,
+            "max_completion_length": 96,
+            "max_grad_norm": 1.0,
+            "max_prompt_length": 256,
+            "num_generations": 4,
+            "num_generations_fallback": 2,
+            "num_iterations": 1,
+            "optimizer": "adamw_torch",
+            "per_device_train_batch_size": 1,
+            "pilot_seed": 101,
+            "pilot_steps": 100,
+            "reward_function": "exact_plus_validity",
+            "save_total_limit": null,
+            "scale_rewards": "none",
+            "smoke_steps": 8,
+            "steps_per_phase": 100,
+            "temperature": 1.0,
+            "top_k": 0,
+            "top_p": 1.0,
+            "warmup_steps": 0,
+            "weight_decay": 0.0
+          },
+          "lora": {
+            "bias": "none",
+            "lora_alpha": 32,
+            "lora_dropout": 0.0,
+            "r": 16,
+            "target_modules": [
+              "q_proj",
+              "k_proj",
+              "v_proj",
+              "o_proj",
+              "gate_proj",
+              "up_proj",
+              "down_proj"
+            ]
+          },
+          "project": {
+            "attn_implementation": "sdpa",
+            "data_root": "data",
+            "dtype": "bfloat16",
+            "model_id": "Qwen/Qwen2.5-1.5B-Instruct",
+            "model_revision": "989aa7980e4cf806f80c7fef2b1adb7bc71aa306",
+            "name": "countdown-direct-grpo",
+            "python_version": "3.11",
+            "results_root": "results",
+            "runs_root": "runs",
+            "tokenizer_revision": "989aa7980e4cf806f80c7fef2b1adb7bc71aa306",
+            "trust_remote_code": false
+          },
+          "prompt": {
+            "max_characters": 256,
+            "system": "You solve arithmetic puzzles. Use every supplied number exactly once. Use only +, -, *, / and parentheses. Intermediate fractions and negative values are allowed. Return a single arithmetic expression and nothing else."
+          },
+          "sft_control": {
+            "gradient_accumulation_steps": 4,
+            "learning_rate": 0.0001,
+            "learning_rate_scheduler": "constant",
+            "logging_steps": 10,
+            "mask_prompt_loss": true,
+            "max_length": 352,
+            "per_device_train_batch_size": 1,
+            "use_packing": false
+          },
+          "verifier": {
+            "allowed_operators": [
+              "+",
+              "-",
+              "*",
+              "/"
+            ],
+            "intermediate_values": "exact_rational",
+            "max_expression_characters": 256
+          }
+        },
+        "curriculum": {
+          "initial_arity": 3,
+          "initial_phase_fraction": 0.25
+        },
+        "dataset_manifest": {
+          "dataset_sha256": "5b70aa24f0ce17b5da72c8031e39388126608e14cb82cd563a47983e52b57363",
+          "problem_sha256": {
+            "test_id": "4085cd9800c8fc52288a778ffefb7127d9155c3158ca92f015f8fae78201580a",
+            "test_ood": "13fc171df5f5df1964553cb4dc3bcc64d0ada001e30227ef45e8ed4b440e07c2",
+            "train": "857bb64f2ad9efca3af9ca4e3e12a1903d7ac5372d51ae7d3060578951cf2697",
+            "validation": "69a0d012e4e38a055819d23f8a645f84495df7907bd8c5d9c53d55f395f12a47"
+          },
+          "schema_version": 1,
+          "seed": 20261013,
+          "solver_version": "fraction-subset-dp-v1",
+          "split_counts": {
+            "test_id": 1024,
+            "test_ood": 512,
+            "train": 4096,
+            "validation": 512
+          },
+          "witness_sha256": {
+            "test_id": "df1c83370eab6972498e007445c0b1b3806f4f2a4d96b9e82cff804d918d11ae",
+            "test_ood": "cc02260b6240a7d5972da01e11e7c8599f7d01e94fe6474f4b923cf041db2608",
+            "train": "e7e23f1980ca4e1e275038741a3dc929bc0d3597f7c4b90df5d549f04c39223a",
+            "validation": "06f173f7c7deea72e995e67d9675cf1d7b901d01eceef17c9c68a84c3840ceb5"
+          }
+        },
+        "experiment_id": "pilot_lr_3e_04",
+        "git_revision": "e066d8a26fc9322f751e2cbb524940eea2372799",
+        "hardware": {
+          "bf16_supported": true,
+          "checks": {
+            "cuda_available": true,
+            "device_count": 1,
+            "torch": "2.8.0+cu128"
+          },
+          "cuda_runtime_version": "12.8",
+          "device": "NVIDIA GeForce RTX 4070 Laptop GPU",
+          "free_memory_gib": 0.836,
+          "nvidia_smi": "NVIDIA GeForce RTX 4070 Laptop GPU, 8188 MiB, 1624 MiB, 617.14",
+          "ok": true,
+          "total_memory_gib": 7.996
+        },
+        "learning_rate": 0.0003,
+        "max_train_steps": 100,
+        "method": "grpo",
+        "model_id": "Qwen/Qwen2.5-1.5B-Instruct",
+        "model_revision": "989aa7980e4cf806f80c7fef2b1adb7bc71aa306",
+        "phase_runs": [
+          {
+            "adapter_sha256_after": "3a983eed47ab8a09b185076f80889a72cb65152e2bba290da457d00f6c22ee93",
+            "adapter_sha256_before": "29822f54efd8be8ba45f1171a2d976aeaec9346945baba39a385f80ad796abd0",
+            "completed_at_utc": "2026-10-13T23:05:59+00:00",
+            "completed_steps": 25,
+            "frozen_base_probe_sha256_after": "9efbfd3d9b9d4054d3fbec51a4963643eed49c805ead422f377b1943d81c986d",
+            "frozen_base_probe_sha256_before": "9efbfd3d9b9d4054d3fbec51a4963643eed49c805ead422f377b1943d81c986d",
+            "peak_memory_allocated_gib": 6.041800498962402,
+            "peak_memory_reserved_gib": 6.095703125,
+            "phase": "phase-01",
+            "phase_complete": true,
+            "requested_steps": 25,
+            "resumed_from_checkpoint": null,
+            "reward_kind": "exact_plus_validity",
+            "start_global_step": 0,
+            "total_parameters": 1562179072,
+            "train_samples_seen": 0.835,
+            "train_wall_seconds": 479.5780261000036,
+            "trainable_parameter_fraction": 0.011819879251333359,
+            "trainable_parameters": 18464768,
+            "training_problems": 2048
+          },
+          {
+            "adapter_sha256_after": "c8b275dbd4ab5820575f15437fc0e9df8942a57340af77c9df3973f11a95ab9c",
+            "adapter_sha256_before": "3a983eed47ab8a09b185076f80889a72cb65152e2bba290da457d00f6c22ee93",
+            "completed_at_utc": "2026-10-13T23:31:59+00:00",
+            "completed_steps": 75,
+            "frozen_base_probe_sha256_after": "9efbfd3d9b9d4054d3fbec51a4963643eed49c805ead422f377b1943d81c986d",
+            "frozen_base_probe_sha256_before": "9efbfd3d9b9d4054d3fbec51a4963643eed49c805ead422f377b1943d81c986d",
+            "peak_memory_allocated_gib": 6.041800498962402,
+            "peak_memory_reserved_gib": 6.169921875,
+            "phase": "phase-02",
+            "phase_complete": true,
+            "requested_steps": 75,
+            "resumed_from_checkpoint": null,
+            "reward_kind": "exact_plus_validity",
+            "start_global_step": 25,
+            "total_parameters": 1562179072,
+            "train_samples_seen": 0.773,
+            "train_wall_seconds": 1553.237586400006,
+            "trainable_parameter_fraction": 0.011819879251333359,
+            "trainable_parameters": 18464768,
+            "training_problems": 4096
+          }
+        ],
+        "pilot": true,
+        "probe_accepted": false,
+        "python": "3.11.9 (tags/v3.11.9:de54cf5, Apr  2 2024, 10:12:12) [MSC v.1938 64 bit (AMD64)]",
+        "reward_group_statistics": {
+          "completion_count": 1600,
+          "groups_with_positive_reward": 363,
+          "positive_group_rate": 0.9075,
+          "reward_groups": 400,
+          "reward_variation_rate": 0.3925,
+          "reward_varying_groups": 157
+        },
+        "reward_kind": "exact_plus_validity",
+        "run_id": "20261013T225753Z-1fde59",
+        "schema_version": 1,
+        "seed": 101,
+        "selected_checkpoint": {
+          "adapter_path": "runs/experiments/pilot_lr_3e_04/20261013T225753Z-1fde59/adapter_selected",
+          "checkpoint_tag": "phase-01-checkpoint-25",
+          "global_step": 25,
+          "metrics": {
+            "by_arity": {
+              "3": {
+                "count": 64,
+                "solve_rate": 0.21875,
+                "valid_rate": 0.671875
+              },
+              "4": {
+                "count": 64,
+                "solve_rate": 0.078125,
+                "valid_rate": 0.515625
+              }
+            },
+            "correct_count": 19,
+            "count": 128,
+            "invalid_rate": 0.40625,
+            "solve_rate": 0.1484375,
+            "valid_count": 76,
+            "valid_rate": 0.59375
+          },
+          "phase": "phase-01"
+        },
+        "selected_learning_rate_pilot": "pilot_lr_3e_04",
+        "software_versions": {
+          "accelerate": "1.10.1",
+          "datasets": "4.1.1",
+          "peft": "0.17.1",
+          "python": "3.11.9",
+          "torch": "2.8.0+cu128",
+          "transformers": "4.56.2",
+          "trl": "0.23.1"
+        },
+        "started_at_utc": "2026-10-13T22:57:53+00:00",
+        "status": "completed",
+        "tokenizer_revision": "989aa7980e4cf806f80c7fef2b1adb7bc71aa306"
+      },
+      "outer_seconds": 2046.017914200027,
+      "run_directory": "runs/experiments/pilot_lr_3e_04/20261013T225753Z-1fde59"
+    },
+    "pilot_sft_calibration_seed_42": {
+      "experiment_id": "pilot_sft_calibration_seed_42",
+      "manifest": {
+        "budget": {
+          "current_command": "pilot-calibration",
+          "current_session_elapsed_hours": 1.2419097222222222,
+          "ledger": "accounting/gpu_budget.sqlite3",
+          "max_gpu_hours": 6.0,
+          "remaining_gpu_hours": 4.349587499999988,
+          "used_gpu_hours": 1.6504125000000123
+        },
+        "completed_at_utc": "2026-10-13T23:38:21+00:00",
+        "configuration": {
+          "budget": {
+            "final_evaluation_hours": 10,
+            "final_training_hours": 56,
+            "final_training_margin_fraction": 0.2,
+            "gpu_hours_total": 72,
+            "holdout_first_grpo_seed": 42,
+            "holdout_probe_steps": 200,
+            "minimum_early_gain_percentage_points": 3.0,
+            "preflight_and_pilots_hours": 6,
+            "uninformative_group_min_accuracy": 0.05,
+            "uninformative_group_probe_size": 128
+          },
+          "data": {
+            "arities": [
+              3,
+              4
+            ],
+            "generation_batch_size_per_arity": [
+              2048,
+              2048
+            ],
+            "numbers_id_max": 30,
+            "numbers_id_min": 1,
+            "numbers_ood_max": 60,
+            "numbers_ood_min": 31,
+            "seed": 20261013,
+            "target_max": 100,
+            "target_min": 10,
+            "test_id_size": 1024,
+            "test_ood_size": 512,
+            "train_size": 4096,
+            "validation_size": 512
+          },
+          "evaluation": {
+            "bootstrap_samples": 10000,
+            "bootstrap_seed": 20261014,
+            "evaluation_tie_break_order": [
+              "accuracy_desc",
+              "invalid_rate_asc",
+              "step_asc"
+            ],
+            "greedy_batch_size": 1,
+            "greedy_max_new_tokens": 96,
+            "record_raw_completions": true,
+            "sampled_count": 4,
+            "sampled_temperature": 1.0,
+            "sampled_test_id_subset_size": 256,
+            "sampled_test_ood_subset_size": 128,
+            "sampled_top_k": 0,
+            "sampled_top_p": 1.0
+          },
+          "grpo": {
+            "ablation_seed": 42,
+            "beta": 0.01,
+            "curriculum_arity": 3,
+            "curriculum_first_phase_fraction": 0.25,
+            "curriculum_phase_evaluation_size": 128,
+            "dataloader_num_workers": 0,
+            "disable_dropout": true,
+            "enable_vllm": false,
+            "epsilon": 0.2,
+            "eval_subset_size": 128,
+            "final_seeds": [
+              42,
+              43,
+              44
+            ],
+            "final_step_candidates": [
+              1200,
+              800,
+              400
+            ],
+            "generation_batch_size": 4,
+            "generation_batch_size_fallback": 2,
+            "gradient_accumulation_steps": 16,
+            "gradient_checkpointing": true,
+            "learning_rate_candidates": [
+              0.0001,
+              0.0003
+            ],
+            "learning_rate_scheduler": "constant",
+            "logging_steps": 10,
+            "loss_type": "dr_grpo",
+            "mask_truncated_completions": false,
+            "max_completion_length": 96,
+            "max_grad_norm": 1.0,
+            "max_prompt_length": 256,
+            "num_generations": 4,
+            "num_generations_fallback": 2,
+            "num_iterations": 1,
+            "optimizer": "adamw_torch",
+            "per_device_train_batch_size": 1,
+            "pilot_seed": 101,
+            "pilot_steps": 100,
+            "reward_function": "exact_plus_validity",
+            "save_total_limit": null,
+            "scale_rewards": "none",
+            "smoke_steps": 8,
+            "steps_per_phase": 100,
+            "temperature": 1.0,
+            "top_k": 0,
+            "top_p": 1.0,
+            "warmup_steps": 0,
+            "weight_decay": 0.0
+          },
+          "lora": {
+            "bias": "none",
+            "lora_alpha": 32,
+            "lora_dropout": 0.0,
+            "r": 16,
+            "target_modules": [
+              "q_proj",
+              "k_proj",
+              "v_proj",
+              "o_proj",
+              "gate_proj",
+              "up_proj",
+              "down_proj"
+            ]
+          },
+          "project": {
+            "attn_implementation": "sdpa",
+            "data_root": "data",
+            "dtype": "bfloat16",
+            "model_id": "Qwen/Qwen2.5-1.5B-Instruct",
+            "model_revision": "989aa7980e4cf806f80c7fef2b1adb7bc71aa306",
+            "name": "countdown-direct-grpo",
+            "python_version": "3.11",
+            "results_root": "results",
+            "runs_root": "runs",
+            "tokenizer_revision": "989aa7980e4cf806f80c7fef2b1adb7bc71aa306",
+            "trust_remote_code": false
+          },
+          "prompt": {
+            "max_characters": 256,
+            "system": "You solve arithmetic puzzles. Use every supplied number exactly once. Use only +, -, *, / and parentheses. Intermediate fractions and negative values are allowed. Return a single arithmetic expression and nothing else."
+          },
+          "sft_control": {
+            "gradient_accumulation_steps": 4,
+            "learning_rate": 0.0001,
+            "learning_rate_scheduler": "constant",
+            "logging_steps": 10,
+            "mask_prompt_loss": true,
+            "max_length": 352,
+            "per_device_train_batch_size": 1,
+            "use_packing": false
+          },
+          "verifier": {
+            "allowed_operators": [
+              "+",
+              "-",
+              "*",
+              "/"
+            ],
+            "intermediate_values": "exact_rational",
+            "max_expression_characters": 256
+          }
+        },
+        "dataset_manifest": {
+          "dataset_sha256": "5b70aa24f0ce17b5da72c8031e39388126608e14cb82cd563a47983e52b57363",
+          "problem_sha256": {
+            "test_id": "4085cd9800c8fc52288a778ffefb7127d9155c3158ca92f015f8fae78201580a",
+            "test_ood": "13fc171df5f5df1964553cb4dc3bcc64d0ada001e30227ef45e8ed4b440e07c2",
+            "train": "857bb64f2ad9efca3af9ca4e3e12a1903d7ac5372d51ae7d3060578951cf2697",
+            "validation": "69a0d012e4e38a055819d23f8a645f84495df7907bd8c5d9c53d55f395f12a47"
+          },
+          "schema_version": 1,
+          "seed": 20261013,
+          "solver_version": "fraction-subset-dp-v1",
+          "split_counts": {
+            "test_id": 1024,
+            "test_ood": 512,
+            "train": 4096,
+            "validation": 512
+          },
+          "witness_sha256": {
+            "test_id": "df1c83370eab6972498e007445c0b1b3806f4f2a4d96b9e82cff804d918d11ae",
+            "test_ood": "cc02260b6240a7d5972da01e11e7c8599f7d01e94fe6474f4b923cf041db2608",
+            "train": "e7e23f1980ca4e1e275038741a3dc929bc0d3597f7c4b90df5d549f04c39223a",
+            "validation": "06f173f7c7deea72e995e67d9675cf1d7b901d01eceef17c9c68a84c3840ceb5"
+          }
+        },
+        "experiment_id": "pilot_sft_calibration_seed_42",
+        "git_revision": "e066d8a26fc9322f751e2cbb524940eea2372799",
+        "hardware": {
+          "bf16_supported": true,
+          "checks": {
+            "cuda_available": true,
+            "device_count": 1,
+            "torch": "2.8.0+cu128"
+          },
+          "cuda_runtime_version": "12.8",
+          "device": "NVIDIA GeForce RTX 4070 Laptop GPU",
+          "free_memory_gib": 0.941,
+          "nvidia_smi": "NVIDIA GeForce RTX 4070 Laptop GPU, 8188 MiB, 1732 MiB, 617.14",
+          "ok": true,
+          "total_memory_gib": 7.996
+        },
+        "learning_rate": 0.0001,
+        "max_train_steps": 8,
+        "method": "sft",
+        "model_id": "Qwen/Qwen2.5-1.5B-Instruct",
+        "model_revision": "989aa7980e4cf806f80c7fef2b1adb7bc71aa306",
+        "phase_runs": [
+          {
+            "adapter_sha256": "1ff12dcbe5c23f1e8658f2db14030eb168093a38db9f81084bbb27119d79bcd2",
+            "completed_at_utc": "2026-10-13T23:35:28+00:00",
+            "completed_steps": 2,
+            "peak_memory_allocated_gib": 5.904227256774902,
+            "peak_memory_reserved_gib": 5.9609375,
+            "phase": "phase-01",
+            "requested_steps": 2,
+            "start_global_step": 0,
+            "total_parameters": 1562179072,
+            "train_samples_per_second": 0.04,
+            "train_wall_seconds": 202.6664243999985,
+            "trainable_parameter_fraction": 0.011819879251333359,
+            "trainable_parameters": 18464768
+          },
+          {
+            "adapter_sha256": "e779007b05adadae59904933a06daca6aaec8755e55fa769b273857543c19eac",
+            "completed_at_utc": "2026-10-13T23:38:20+00:00",
+            "completed_steps": 6,
+            "peak_memory_allocated_gib": 6.041800498962402,
+            "peak_memory_reserved_gib": 6.173828125,
+            "phase": "phase-02",
+            "requested_steps": 6,
+            "start_global_step": 2,
+            "total_parameters": 1562179072,
+            "train_samples_per_second": 0.146,
+            "train_wall_seconds": 164.93601710000075,
+            "trainable_parameter_fraction": 0.011819879251333359,
+            "trainable_parameters": 18464768
+          }
+        ],
+        "prompt_loss_masking": "prompt token labels set to -100; completion and EOS labels train",
+        "python": "3.11.9 (tags/v3.11.9:de54cf5, Apr  2 2024, 10:12:12) [MSC v.1938 64 bit (AMD64)]",
+        "reference_witness_count": 4096,
+        "run_id": "20261013T233159Z-eb5792",
+        "schema_version": 1,
+        "seed": 42,
+        "selected_checkpoint": {
+          "adapter_path": "runs/experiments/pilot_sft_calibration_seed_42/20261013T233159Z-eb5792/adapter_selected",
+          "checkpoint_tag": "phase-02-checkpoint-6",
+          "global_step": 8,
+          "metrics": {
+            "by_arity": {
+              "3": {
+                "count": 64,
+                "solve_rate": 0.09375,
+                "valid_rate": 0.828125
+              },
+              "4": {
+                "count": 64,
+                "solve_rate": 0.0,
+                "valid_rate": 0.84375
+              }
+            },
+            "correct_count": 6,
+            "count": 128,
+            "invalid_rate": 0.1640625,
+            "solve_rate": 0.046875,
+            "valid_count": 107,
+            "valid_rate": 0.8359375
+          },
+          "phase": "phase-02"
+        },
+        "selected_learning_rate_pilot": null,
+        "software_versions": {
+          "accelerate": "1.10.1",
+          "datasets": "4.1.1",
+          "peft": "0.17.1",
+          "python": "3.11.9",
+          "torch": "2.8.0+cu128",
+          "transformers": "4.56.2",
+          "trl": "0.23.1"
+        },
+        "started_at_utc": "2026-10-13T23:31:59+00:00",
+        "status": "completed",
+        "tokenizer_revision": "989aa7980e4cf806f80c7fef2b1adb7bc71aa306"
+      },
+      "outer_seconds": 381.3796410000068,
+      "run_directory": "runs/experiments/pilot_sft_calibration_seed_42/20261013T233159Z-eb5792"
+    }
+  },
+  "schema_version": 1
+}
