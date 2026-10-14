@@ -133,12 +133,18 @@ def _figure_accuracy(config: ProjectConfig) -> Path | None:
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
 
-    labels = ["Base", "GRPO 42", "GRPO 43", "GRPO 44", "Validity", "SFT"]
-    identifiers = FINAL_EXPERIMENT_IDS
-    id_values = [_metric(config, identifier, "test_id") for identifier in identifiers]
-    ood_values = [_metric(config, identifier, "test_ood") for identifier in identifiers]
-    if not any(metric and metric.get("count", 0) for metric in id_values + ood_values):
+    all_labels = ["Base", "GRPO 42", "GRPO 43", "GRPO 44", "Validity", "SFT"]
+    measured = []
+    for label, identifier in zip(all_labels, FINAL_EXPERIMENT_IDS, strict=True):
+        metric_id = _metric(config, identifier, "test_id")
+        metric_ood = _metric(config, identifier, "test_ood")
+        if any(metric and metric.get("count", 0) for metric in (metric_id, metric_ood)):
+            measured.append((label, metric_id, metric_ood))
+    if not measured:
         return None
+    labels = [row[0] for row in measured]
+    id_values = [row[1] for row in measured]
+    ood_values = [row[2] for row in measured]
     x = list(range(len(labels)))
     width = 0.36
     fig, axis = plt.subplots(figsize=(10, 5.5), layout="constrained")
@@ -323,6 +329,18 @@ def generate_report(config: ProjectConfig) -> dict[str, Any]:
                 f"(95% CI {100*interval['ci_95_lower']:+.2f}, {100*interval['ci_95_upper']:+.2f}; "
                 f"n={interval['n_paired']})."
             )
+    decision = _read_json(config.results_dir / "early_holdout_decision.json")
+    if decision is not None and not decision.get("continue_all_seeds", True):
+        lines.extend(
+            [
+                "",
+                "The pre-registered step-200 validation gate did not pass, so seeds 43 and 44 were not run. "
+                f"Seed 42 changed validation accuracy by "
+                f"{float(decision['accuracy_change_percentage_points']):+.2f} percentage points "
+                f"against the {float(decision['minimum_gain_percentage_points']):.1f}-point threshold. "
+                "The result is a budget-stopped single-seed experiment, not a three-seed estimate.",
+            ]
+        )
     lines.extend(["", "## Run evidence", ""])
     if used_gpu_hours is not None:
         lines.append(f"Accumulated GPU time: {used_gpu_hours:.2f} / {config.budget['gpu_hours_total']} hours.")
