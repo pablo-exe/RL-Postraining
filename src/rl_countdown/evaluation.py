@@ -178,13 +178,13 @@ def _evaluate_file(
                     evaluation_mode=mode,
                 )
                 stream.write(json.dumps(record, sort_keys=True, ensure_ascii=False) + "\n")
+                records.append(record)
                 calls_since_sync += 1
                 if calls_since_sync >= 8:
                     stream.flush()
                     calls_since_sync = 0
                     tracker.flush()
                     tracker.ensure_available()
-                    records.append(record)
                     provisional = (
                         _single_pass_metrics(records, len(problems))
                         if not sampled
