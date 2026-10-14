@@ -308,10 +308,17 @@ def generate_report(config: ProjectConfig) -> dict[str, Any]:
         )
     lines.extend(["", "## Paired uncertainty", ""])
     if aggregate is None:
-        lines.append(
-            "The three-seed primary estimate is pending until the base and all three GRPO seed predictions "
-            "share test IDs."
-        )
+        decision = _read_json(config.results_dir / "early_holdout_decision.json")
+        if decision is not None and not decision.get("continue_all_seeds", True):
+            lines.append(
+                "A three-seed estimate was not produced: the pre-registered validation gate stopped the "
+                "primary experiment before seeds 43 and 44."
+            )
+        else:
+            lines.append(
+                "The three-seed primary estimate is pending until the base and all three GRPO seed predictions "
+                "share test IDs."
+            )
     else:
         lines.append(
             "A paired bootstrap over the shared ID test problems estimates the mean three-seed change at "
@@ -322,7 +329,11 @@ def generate_report(config: ProjectConfig) -> dict[str, Any]:
     lines.extend(["", "Per-seed paired changes:", ""])
     for seed, interval in bootstrap.items():
         if interval is None:
-            lines.append(f"- Seed {seed}: pending.")
+            decision = _read_json(config.results_dir / "early_holdout_decision.json")
+            if seed in (43, 44) and decision is not None and not decision.get("continue_all_seeds", True):
+                lines.append(f"- Seed {seed}: not run; stopped by the pre-registered step-200 validation gate.")
+            else:
+                lines.append(f"- Seed {seed}: pending.")
         else:
             lines.append(
                 f"- Seed {seed}: {100*interval['mean_accuracy_difference']:+.2f} pp "
@@ -400,10 +411,22 @@ def _update_readme_results(config: ProjectConfig, rows: list[dict[str, Any]]) ->
         "grpo_validity_seed_42": "Validity-reward ablation, seed 42",
         "sft_witness_seed_42": "SFT control, seed 42",
     }
+    decision = _read_json(config.results_dir / "early_holdout_decision.json")
     for row in rows:
         metric_id = row["test_id"] or {}
         metric_ood = row["test_ood"] or {}
-        status = "measured" if metric_id.get("complete") and metric_ood.get("complete") else "partial / pending"
+        stopped_seed = (
+            row["experiment_id"] in {"grpo_correct_seed_43", "grpo_correct_seed_44"}
+            and decision is not None
+            and not decision.get("continue_all_seeds", True)
+        )
+        status = (
+            "not run (step-200 gate)"
+            if stopped_seed
+            else "measured"
+            if metric_id.get("complete") and metric_ood.get("complete")
+            else "partial / pending"
+        )
         table.append(
             f"| {names[row['experiment_id']]} | {_as_percent(metric_id.get('solve_rate'))} "
             f"({metric_id.get('count', 0)}/{metric_id.get('expected_count', '—')}) | "
