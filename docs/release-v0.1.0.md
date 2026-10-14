@@ -11,4 +11,4 @@ The measured model achieved 16/1,024 (1.56%) exact ID greedy solutions, with a p
 
 The base checkpoint's Apache License 2.0 text is included in the archive. The immutable model revision is `989aa7980e4cf806f80c7fef2b1adb7bc71aa306`.
 
-**Publication status:** the package is prepared locally at `dist/grpo-correct-seed-42-adapter-v0.1.0.zip`; it has not yet been uploaded as a GitHub Release asset. When published, attach that ZIP and its `.sha256` sidecar to the `v0.1.0` release. The local `dist/` directory is ignored by Git.
+**Publication status:** the package is prepared locally at `dist/grpo-correct-seed-42-adapter-v0.1.0.zip`; it has not yet been uploaded as a GitHub Release asset. The `v0.1.0` source tag is pushed. GitHub redirected the upload page to sign-in, so the ZIP and `.sha256` sidecar still need to be attached to the `v0.1.0` release after the owner signs in. No credentials were entered. The local `dist/` directory is ignored by Git.
