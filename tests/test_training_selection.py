@@ -2,7 +2,12 @@ from __future__ import annotations
 
 import json
 
-from rl_countdown.training import _checkpoint_global_step, _completed_phase_record, select_checkpoint
+from rl_countdown.training import (
+    _checkpoint_global_step,
+    _completed_phase_record,
+    _record_resume_revision,
+    select_checkpoint,
+)
 
 
 def test_checkpoint_selection_reads_phase_local_validation_log(tmp_path) -> None:
@@ -56,3 +61,13 @@ def test_resume_reads_step_from_latest_trainer_checkpoint(tmp_path) -> None:
     )
     assert _checkpoint_global_step(checkpoint) == 200
     assert _checkpoint_global_step(tmp_path / "missing") is None
+
+
+def test_resume_manifest_records_each_new_code_revision_once() -> None:
+    manifest = {"git_revision": "old"}
+    _record_resume_revision(manifest, "old")
+    _record_resume_revision(manifest, "new")
+    _record_resume_revision(manifest, "new")
+    assert len(manifest["resume_git_revisions"]) == 1
+    assert manifest["resume_git_revisions"][0]["git_revision"] == "new"
+    assert manifest["resume_git_revisions"][0]["resumed_at_utc"]

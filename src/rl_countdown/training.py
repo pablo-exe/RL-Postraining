@@ -157,6 +157,16 @@ def current_git_revision(root: Path) -> str | None:
     return result.stdout.strip()
 
 
+def _record_resume_revision(manifest: dict[str, Any], revision: str | None) -> None:
+    """Record code revisions used after a run is resumed from an earlier commit."""
+    if not revision or revision == manifest.get("git_revision"):
+        return
+    entries = manifest.setdefault("resume_git_revisions", [])
+    if any(entry.get("git_revision") == revision for entry in entries):
+        return
+    entries.append({"git_revision": revision, "resumed_at_utc": now_utc()})
+
+
 def _data_manifest(bundle: DatasetBundle) -> dict[str, Any]:
     return bundle.manifest.to_dict()
 
@@ -926,6 +936,7 @@ def train_grpo_experiment(
         ):
             raise ValueError("Refusing to resume a GRPO run whose frozen model, dataset, seed, or config changed.")
         manifest = saved_manifest
+        _record_resume_revision(manifest, current_git_revision(config.root))
     hardware = require_cuda()
     if existing_run is None:
         manifest = _run_metadata(
@@ -1320,6 +1331,7 @@ def train_sft_experiment(
             or manifest.get("seed") != seed
         ):
             raise ValueError("Refusing to resume an SFT run whose frozen model, dataset, seed, or config changed.")
+        _record_resume_revision(manifest, current_git_revision(config.root))
     hardware = require_cuda()
     if existing_run is None:
         manifest = _run_metadata(
