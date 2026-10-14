@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import json
 
-from rl_countdown.training import _completed_phase_record, select_checkpoint
+from rl_countdown.training import _checkpoint_global_step, _completed_phase_record, select_checkpoint
 
 
 def test_checkpoint_selection_reads_phase_local_validation_log(tmp_path) -> None:
@@ -45,3 +45,14 @@ def test_resume_skips_only_a_phase_with_a_complete_step_budget(tmp_path) -> None
         "completed_steps": 2,
     }
     assert _completed_phase_record(marker, requested_steps=3) is None
+
+
+def test_resume_reads_step_from_latest_trainer_checkpoint(tmp_path) -> None:
+    checkpoint = tmp_path / "checkpoint-200"
+    checkpoint.mkdir()
+    (checkpoint / "trainer_state.json").write_text(
+        json.dumps({"global_step": 200}),
+        encoding="utf-8",
+    )
+    assert _checkpoint_global_step(checkpoint) == 200
+    assert _checkpoint_global_step(tmp_path / "missing") is None

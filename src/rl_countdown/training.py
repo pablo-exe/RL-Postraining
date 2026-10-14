@@ -695,6 +695,18 @@ def _completed_phase_record(path: Path, requested_steps: int) -> dict[str, Any] 
     return record
 
 
+def _checkpoint_global_step(checkpoint: str | Path | None) -> int | None:
+    """Read the local Trainer step stored in a checkpoint, if it is available."""
+    if checkpoint is None:
+        return None
+    state_path = Path(checkpoint) / "trainer_state.json"
+    if not state_path.is_file():
+        return None
+    state = json.loads(state_path.read_text(encoding="utf-8"))
+    step = state.get("global_step")
+    return int(step) if isinstance(step, int) else None
+
+
 def select_checkpoint(
     run_dir: Path,
     phase_dirs: tuple[Path, ...],
@@ -959,6 +971,39 @@ def train_grpo_experiment(
                 phase_status.append(completed_record)
                 continue
             checkpoint = get_last_checkpoint(str(phase_dir)) if resume else None
+            checkpoint_step = _checkpoint_global_step(checkpoint)
+            step_offset = sum(phase_sizes[: phase_index - 1])
+            if (
+                stop_at_global_step is not None
+                and checkpoint_step is not None
+                and step_offset + checkpoint_step >= stop_at_global_step
+            ):
+                interrupted_path = phase_dir / "phase_interrupted.json"
+                interrupted_record = (
+                    json.loads(interrupted_path.read_text(encoding="utf-8"))
+                    if interrupted_path.is_file()
+                    else next(
+                        (
+                            record
+                            for record in manifest.get("phase_runs", [])
+                            if record.get("phase") == phase_name
+                        ),
+                        None,
+                    )
+                )
+                if interrupted_record is None:
+                    interrupted_record = {
+                        "phase": phase_name,
+                        "requested_steps": phase_steps,
+                        "completed_steps": checkpoint_step,
+                        "start_global_step": step_offset,
+                        "phase_complete": checkpoint_step >= phase_steps,
+                        "resumed_from_checkpoint": checkpoint,
+                        "stopped_at_global_step": step_offset + checkpoint_step,
+                    }
+                    write_json(interrupted_path, interrupted_record)
+                phase_status.append(interrupted_record)
+                break
 
             set_seed(seed)
             if phase_index == 1:
@@ -1080,7 +1125,12 @@ def train_grpo_experiment(
                 raise RuntimeError(f"{phase_name} did not complete a single GRPO optimizer update.")
             del trainer, model, train_dataset
             torch.cuda.empty_cache()
-            if tracker.should_stop:
+            reached_stop_step = (
+                stop_at_global_step is not None
+                and sum(phase_sizes[:phase_index - 1]) + int(phase_record["completed_steps"])
+                >= stop_at_global_step
+            )
+            if tracker.should_stop or reached_stop_step:
                 break
 
         if phase_status and len(phase_status) == 2:
