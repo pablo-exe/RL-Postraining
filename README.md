@@ -4,17 +4,17 @@ An auditable reinforcement-learning post-training experiment for a small instruc
 
 This is a deliberately narrow experiment. It can support a claim about arithmetic puzzle solving under the stated protocol; it cannot establish that the model gained general reasoning ability. The project compares RL with the untouched model and with a separately trained supervised control.
 
-> **Results status: pending.** Training and evaluation have not produced measured results yet. The table below must be filled only from committed evaluation artifacts. Do not cite a planned target as an achieved result.
+> **Measured 14 October 2026.** The full frozen evaluation is complete. The primary direct-GRPO result is small and uncertain: +0.59 percentage points on ID greedy accuracy versus the base checkpoint (paired 95% bootstrap interval −0.39 to +1.56 pp). The pre-registered validation gate stopped the remaining primary seeds. See the [measured report](results/report.md) for controls, OOD results, run evidence, and figures.
 
 <!-- MEASURED_RESULTS_START -->
 | Model / run | ID greedy accuracy | OOD greedy accuracy | Status |
 |---|---:|---:|---|
-| Public instruction checkpoint | pending | pending | Pending measurement |
-| Direct GRPO, seed 42 | pending | pending | Pending measurement |
-| Direct GRPO, seed 43 | pending | pending | Pending measurement |
-| Direct GRPO, seed 44 | pending | pending | Pending measurement |
-| Validity-reward ablation, seed 42 | pending | pending | Pending measurement |
-| SFT control, seed 42 | pending | pending | Pending measurement |
+| Public instruction checkpoint | 1.0% (10/1024) | 0.4% (2/512) | measured |
+| Direct GRPO, seed 42 | 1.6% (16/1024) | 0.0% (0/512) | measured |
+| Direct GRPO, seed 43 | pending (0/—) | pending (0/—) | not run (step-200 gate) |
+| Direct GRPO, seed 44 | pending (0/—) | pending (0/—) | not run (step-200 gate) |
+| Validity-reward ablation, seed 42 | 11.4% (117/1024) | 0.0% (0/512) | measured |
+| SFT control, seed 42 | 21.7% (222/1024) | 22.1% (113/512) | measured |
 <!-- MEASURED_RESULTS_END -->
 
 ## Experiment at a glance
@@ -70,10 +70,10 @@ uv run rl-countdown report --config configs/default.yaml
 
 The engineering smoke run uses only 16 balanced validation problems to verify save, resume, and adapter loading quickly. The 128-row validation subset is reserved for pilot and training-checkpoint comparisons; the final report evaluates the full 512-row validation split.
 
-Training commands accept `--resume`; a resumed run must have matching model, data, and configuration hashes. Each run uses its own output directory, and a new run must not overwrite an existing one. For local inference, point `--adapter` at a selected trained adapter:
+Training commands accept `--resume`; a resumed run must have matching model, data, and configuration hashes. Each run uses its own output directory, and a new run must not overwrite an existing one. After the packaged seed-42 adapter is published in the `v0.1.0` release, extract it into `models/` and pass its directory to the CLI. The package hash and publication status are recorded in [the release manifest](docs/release-v0.1.0.md):
 
 ```powershell
-uv run rl-countdown predict --config configs/default.yaml --nums 2 3 7 --target 20 --adapter runs/grpo_correct_seed_42/best
+uv run rl-countdown predict --config configs/default.yaml --nums 2 3 7 --target 20 --adapter models/grpo_correct_seed_42
 ```
 
 The command names and supported options are the public CLI contract. Read the committed run manifests and `configs/` files for exact experiment configuration and artifact paths.
@@ -82,7 +82,7 @@ The command names and supported options are the public CLI contract. Read the co
 
 The primary metric is greedy one-response accuracy on the frozen ID test set. The OOD test uses numbers from a disjoint, larger range and is reported separately; improvement on OOD is not a success requirement. Report validity, accuracy conditional on validity, scores by puzzle arity, output length, truncation, latency, training time, and peak GPU memory alongside the primary metric.
 
-The pre-registered target is a mean improvement of at least 10 percentage points on ID test, a paired 95% bootstrap interval above zero, and no main seed below the original checkpoint. These are **targets**, not results. An honest negative result completes the project if the protocol, runs, and evidence are reported accurately. The full selection, stopping, and uncertainty rules are in [the protocol](docs/protocol.md).
+The pre-registered target was a mean improvement of at least 10 percentage points on ID test, a paired 95% bootstrap interval above zero, and no main seed below the original checkpoint. The primary GRPO run did not meet it: the step-200 validation change was −0.78 pp against a +3 pp continuation gate, so seeds 43 and 44 were not run. The measured result is therefore a one-seed pilot, not a three-seed estimate. Secondary controls are reported separately and do not replace that primary result. The full selection, stopping, and uncertainty rules are in [the protocol](docs/protocol.md).
 
 ## Limitations
 
@@ -95,4 +95,4 @@ The pre-registered target is a mean improvement of at least 10 percentage points
 
 ## Interview guide and artifacts
 
-The [Spanish interview guide](docs/interview.md) gives a short project explanation and prepares answers about reward design, leakage, controls, and limitations. `results/` is reserved for selected evidence such as metrics, predictions, manifests, and figures. Training checkpoints and model weights belong in ignored local run directories, not in Git. The seed-42 adapter is intended for a `v0.1.0` GitHub release with a checksum and loading instructions after results have been measured.
+The [Spanish interview guide](docs/interview.md) gives a measured project explanation and prepares answers about reward design, leakage, controls, and limitations. `results/` contains the final metrics, predictions, compact run evidence, and figures. Training checkpoints and model weights stay out of the source repository; the selected seed-42 adapter is packaged separately with a checksum in the [release manifest](docs/release-v0.1.0.md). The final report distinguishes the primary result from the single-seed validity and SFT controls.

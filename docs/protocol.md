@@ -1,6 +1,6 @@
 # Countdown RLVR experimental protocol
 
-**Status:** protocol specification. No training or evaluation result is asserted here. Results remain pending until generated from real runs.
+**Status:** frozen protocol with completed measurements. The measured outcomes are in [the results report](../results/report.md); this file preserves the rules that were fixed before test evaluation.
 
 ## Research question and claim boundary
 
@@ -114,12 +114,12 @@ Separately sample four completions on fixed balanced subsets of 256 ID and 128 O
 
 Use 10,000 paired problem-level bootstrap resamples with seed `20261014` for improvement over baseline. With three main seeds, show every seed, mean and standard deviation across runs, plus a bootstrap interval for mean per-problem improvement. Explain that the interval captures problem variation, while seed variation is separate.
 
-The pre-registered target is at least 10 percentage points mean improvement on ID test, a 95% paired bootstrap interval above zero, and no main seed below baseline. This target is pending, not a result. Beating SFT is not required. OOD is reported separately and is not a success condition. Never tune after observing test.
+The pre-registered target was at least 10 percentage points mean improvement on ID test, a 95% paired bootstrap interval above zero, and no main seed below baseline. It was not met: the sole primary seed changed ID test accuracy by +0.59 pp (95% paired bootstrap interval −0.39 to +1.56 pp), and the validation continuation gate stopped seeds 43 and 44. The result is a one-seed primary experiment. Beating SFT was not required. OOD is reported separately and is not a success condition. Never tune after observing test.
 
 ## Artifacts and completion
 
 Each unique run records `run_manifest.json` (config, model revision, Git commit, seeds, data hashes, hardware, dependencies, elapsed GPU-hours, reward-group statistics, failures), `training_metrics.jsonl`, `rollouts.jsonl` (ID, phase, step, raw completion, reward, verifier result), `checkpoint_evaluations.jsonl`, checkpoint files, and the selected adapter. Evaluation writes resumable per-split `predictions_*.jsonl` and `metrics_*.json` files with raw response, token count, verifier result, latency, finish reason, error counts, and arity metrics. Retain failed runs; never reuse run IDs.
 
-Version the small synthetic data, configs, selected manifests, compressed final predictions, metrics, and figures. Ignore local weights, checkpoints, environments, and caches. Keep the selected adapter reloadable locally; prepare the seed-42 main adapter for a `v0.1.0` GitHub release with checksum and inference instructions after measurements are final. If release authentication fails, keep the package ready and document that step.
+Version the small synthetic data, configs, selected manifests, compact training metrics and checkpoint evaluations, final predictions, metrics, and figures. Ignore local weights, checkpoints, environments, and caches. Keep the selected adapter reloadable locally; prepare the seed-42 main adapter for a `v0.1.0` GitHub release with checksum and inference instructions after measurements are final. If release publication cannot be completed, keep the package ready and document that step.
 
 The project is complete when CPU tests/lint pass, data/protocol hashes are frozen, authorized runs finish or stop by the specified rules with diagnosis, final artifacts are auditable, documentation uses measured results accurately, and the selected adapter reloads through `predict`. Project completion does not imply the target was achieved.
