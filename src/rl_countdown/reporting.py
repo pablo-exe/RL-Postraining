@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import math
 import random
+import shutil
 from pathlib import Path
 from typing import Any
 
@@ -72,12 +73,42 @@ def _experiment_runs(config: ProjectConfig) -> dict[str, Path]:
                 manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
                 if manifest.get("status") in {"completed", "budget_stopped"}:
                     runs[experiment_id] = manifest_path.parent
+        if experiment_id not in runs:
+            evidence_dir = config.results_dir / "run_evidence" / experiment_id
+            evidence_manifest = evidence_dir / "run_manifest.json"
+            if evidence_manifest.is_file():
+                manifest = json.loads(evidence_manifest.read_text(encoding="utf-8"))
+                if manifest.get("status") in {"completed", "budget_stopped"}:
+                    runs[experiment_id] = evidence_dir
     return runs
 
 
-def _main_seed_bootstrap(config: ProjectConfig, seed: int) -> dict[str, Any] | None:
+def _snapshot_run_evidence(config: ProjectConfig, runs: dict[str, Path]) -> dict[str, Path]:
+    """Copy compact, selected run evidence into the versioned results directory."""
+    snapshots: dict[str, Path] = {}
+    for experiment_id, source_dir in runs.items():
+        destination = config.results_dir / "run_evidence" / experiment_id
+        destination.mkdir(parents=True, exist_ok=True)
+        manifest = source_dir / "run_manifest.json"
+        if manifest.is_file() and manifest.resolve() != (destination / manifest.name).resolve():
+            shutil.copy2(manifest, destination / manifest.name)
+        training_metrics = source_dir / "training_metrics.jsonl"
+        if training_metrics.is_file() and training_metrics.resolve() != (destination / training_metrics.name).resolve():
+            shutil.copy2(training_metrics, destination / training_metrics.name)
+        for evaluations in source_dir.glob("phase-*/checkpoint_evaluations.jsonl"):
+            target = destination / evaluations.relative_to(source_dir)
+            target.parent.mkdir(parents=True, exist_ok=True)
+            if evaluations.resolve() != target.resolve():
+                shutil.copy2(evaluations, target)
+        snapshots[experiment_id] = destination
+    return snapshots
+
+
+def _paired_bootstrap_vs_base(
+    config: ProjectConfig, experiment_id: str, *, seed: int
+) -> dict[str, Any] | None:
     base = _predictions(config, "base_qwen25_15b", "test_id")
-    candidate = _predictions(config, f"grpo_correct_seed_{seed}", "test_id")
+    candidate = _predictions(config, experiment_id, "test_id")
     shared = sorted(base.keys() & candidate.keys())
     if not shared:
         return None
@@ -93,6 +124,12 @@ def _main_seed_bootstrap(config: ProjectConfig, seed: int) -> dict[str, Any] | N
         "ci_95_lower": lower,
         "ci_95_upper": upper,
     }
+
+
+def _main_seed_bootstrap(config: ProjectConfig, seed: int) -> dict[str, Any] | None:
+    return _paired_bootstrap_vs_base(
+        config, f"grpo_correct_seed_{seed}", seed=seed
+    )
 
 
 def _aggregate_main_seeds(config: ProjectConfig) -> dict[str, Any] | None:
@@ -226,7 +263,7 @@ def generate_report(config: ProjectConfig) -> dict[str, Any]:
     """Summarize registered training outcomes and currently available evaluation evidence."""
     summary_path = config.results_dir / "evaluation_summary.json"
     evaluation_summary = _read_json(summary_path) or {}
-    runs = _experiment_runs(config)
+    runs = _snapshot_run_evidence(config, _experiment_runs(config))
     metric_rows = []
     for experiment_id in FINAL_EXPERIMENT_IDS:
         metric_rows.append(
@@ -240,6 +277,15 @@ def generate_report(config: ProjectConfig) -> dict[str, Any]:
         )
     bootstrap = {
         str(seed): _main_seed_bootstrap(config, seed) for seed in (42, 43, 44)
+    }
+    secondary_comparisons = {
+        experiment_id: _paired_bootstrap_vs_base(
+            config, experiment_id, seed=int(config.evaluation["bootstrap_seed"]) + offset
+        )
+        for experiment_id, offset in (
+            ("grpo_validity_seed_42", 1001),
+            ("sft_witness_seed_42", 1002),
+        )
     }
     aggregate = _aggregate_main_seeds(config)
     budget_path = config.runs_dir / "accounting" / "gpu_budget.sqlite3"
@@ -261,6 +307,7 @@ def generate_report(config: ProjectConfig) -> dict[str, Any]:
         "measured_experiments": list(evaluation_summary.get("results", {}).keys()),
         "metrics": metric_rows,
         "paired_bootstrap_vs_base": bootstrap,
+        "secondary_comparisons_vs_base": secondary_comparisons,
         "three_seed_primary_estimate": aggregate,
         "gpu_hours_used": used_gpu_hours,
         "gpu_hours_limit": float(config.budget["gpu_hours_total"]),
@@ -340,6 +387,24 @@ def generate_report(config: ProjectConfig) -> dict[str, Any]:
                 f"(95% CI {100*interval['ci_95_lower']:+.2f}, {100*interval['ci_95_upper']:+.2f}; "
                 f"n={interval['n_paired']})."
             )
+    lines.extend(
+        [
+            "",
+            "Secondary paired comparisons (descriptive; one training seed each):",
+        ]
+    )
+    for experiment_id, interval in secondary_comparisons.items():
+        if interval is None:
+            lines.append(f"- `{experiment_id}`: pending paired test predictions.")
+        else:
+            lines.append(
+                f"- `{experiment_id}` vs base: {100*interval['mean_accuracy_difference']:+.2f} pp "
+                f"(95% paired bootstrap interval {100*interval['ci_95_lower']:+.2f} to "
+                f"{100*interval['ci_95_upper']:+.2f}; n={interval['n_paired']})."
+            )
+    lines.append(
+        "These intervals resample test problems; they do not estimate training-seed variability."
+    )
     decision = _read_json(config.results_dir / "early_holdout_decision.json")
     if decision is not None and not decision.get("continue_all_seeds", True):
         lines.extend(
@@ -429,9 +494,9 @@ def _update_readme_results(config: ProjectConfig, rows: list[dict[str, Any]]) ->
         )
         table.append(
             f"| {names[row['experiment_id']]} | {_as_percent(metric_id.get('solve_rate'))} "
-            f"({metric_id.get('count', 0)}/{metric_id.get('expected_count', '—')}) | "
+            f"({metric_id.get('correct_count', 0)}/{metric_id.get('expected_count', '—')}) | "
             f"{_as_percent(metric_ood.get('solve_rate'))} "
-            f"({metric_ood.get('count', 0)}/{metric_ood.get('expected_count', '—')}) | {status} |"
+            f"({metric_ood.get('correct_count', 0)}/{metric_ood.get('expected_count', '—')}) | {status} |"
         )
     prefix, remainder = content.split(start_marker, 1)
     _, suffix = remainder.split(end_marker, 1)
