@@ -352,7 +352,11 @@ def generate_for_problem(
         "eos_token_id": tokenizer.eos_token_id,
         "use_cache": True,
     }
-    if not greedy:
+    if greedy:
+        # Override sampling defaults bundled with the public model so greedy
+        # evaluation is silent and independent of those checkpoint defaults.
+        generation_args.update(temperature=1.0, top_p=1.0, top_k=50)
+    else:
         generation_args.update(
             temperature=float(config.evaluation["sampled_temperature"]),
             top_p=float(config.evaluation["sampled_top_p"]),
